@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+******************************************************************************
+* Tag Library: iNamik Main
+******************************************************************************
+ -->
+<template-lib>
+	<description>
+	<![CDATA[
+		Default tag library for the iNamik Template Engine.
+		<p/>
+		This library provides basic template functionaility.
+	]]>
+	</description>
+
+	<!--
+	**************************************************************************
+	* Action: foreach
+	**************************************************************************
+	 -->
+	<action
+		name        = "foreach"
+		class       = "com.inamik.template.lib.main.actions.Foreach"
+		parmType    = "attributes"
+		blockType   = "body"
+		bodyContent = "template"
+	>
+		<description>
+		<![CDATA[
+			Iterate over a container of items.
+			<p/>
+			When iterating over a list, you can access each item of the list under
+			the variable defined in the 'id' attribute.
+			<p/>
+			When iterating over a map, each element is a java.util.Map.Enty, providing
+			you access to the the key and the value.  You may also provide an optional
+			'key' attribute, which would then store the key for each iteration and store
+			the value under the 'id' field for direct access.  See the examples for more
+			information.
+			<p/>
+			Also accepts an optional 'loop' attribute that gives you access to
+			information about each iteration.
+		]]>
+		</description>
+		<attribute name="id" required="true">
+			The name of the template variable to assign the
+			element to during each iteration.
+		</attribute>
+		<attribute name="in" required="true">
+			The container to iterate over.
+		</attribute>
+		<attribute name="key" required="false">
+			Optionally used when iterating over a map.  If provided,
+			stores the key of the map entry in this field and stores
+			the value in the 'id' field.
+		</attribute>
+		<attribute name="loop" required="false">
+		<![CDATA[
+			If provided, stores information about each iteration. The
+			following properties are available:
+			<p/>
+			&nbsp;&nbsp; iteration : The iteraction count, starting from 0
+			<br/>
+			&nbsp;&nbsp; size      : The number of elements to be iterated over, or 0 if unknown.
+			<br/>
+			&nbsp;&nbsp; first     : true if this iteration is the first iteration, false otherwise.
+			<br/>
+			&nbsp;&nbsp; last      : true if this iteration is the last iteration, false otherwise.
+		]]>
+		</attribute>
+		<example title="List Example">
+		<![CDATA[
+			{foreach id=item in=$list}
+			<br/>
+			&nbsp;&nbsp; item = {$item}
+			<br/>
+			{/foreach}
+		]]>
+		</example>
+		<example title="Map Example">
+		<![CDATA[
+			{foreach id=item in=$map}
+			<br/>
+			&nbsp;&nbsp; key = {$item.key}
+			<br/>
+			&nbsp;&nbsp; value = {$item.value}
+			<br/>
+			{/foreach}
+		]]>
+		</example>
+		<example title="Map Example With Key">
+		<![CDATA[
+			{foreach id=item in=$map key=key}
+			<br/>
+			&nbsp;&nbsp; key = {$key}
+			<br/>
+			&nbsp;&nbsp; value = {$item}
+			<br/>
+			{/foreach}
+		]]>
+		</example>
+		<example title="List Example With Loop">
+		<![CDATA[
+			{foreach id=item in=$list loop=loop}
+			<br/>
+			&nbsp;&nbsp; iteration = {$loop.iteration}
+			<br/>
+			&nbsp;&nbsp; size  = {$loop.size}
+			<br/>
+			&nbsp;&nbsp; first = {$loop.first}
+			<br/>
+			&nbsp;&nbsp; last  = {$loop.last}
+			<br/>
+			&nbsp;&nbsp; item  = {$item}
+			{/foreach}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: if
+	**************************************************************************
+	 -->
+	<action
+		name        = "if"
+		class       = "com.inamik.template.lib.main.actions.If"
+		parmType    = "expression"
+		blockType   = "body"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to conditionally include a template body.
+			<p/>
+			Takes a single expression as a parameter and includes the template body
+			if the expression resolves to <code>true</code>.
+			<p/>
+			If the expression resolves to <code>false</code> then the body is skipped
+			and the first body-alt is executed, if present.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{if $foo}
+			<br/>
+			&nbsp;&nbsp; {$foo}
+			<br>
+			{/if}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: elseif
+	**************************************************************************
+	 -->
+	<action
+		name        = "elseif"
+		class       = "com.inamik.template.lib.main.actions.ElseIf"
+		parmType    = "expression"
+		blockType   = "body-alt"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to chain an {if} statement as a body-alt.
+			<p/>
+			Although most typically used in if-elseif-else constructs, this action
+			tag can be used anywherea a body-alt is accepted.
+			<p/>
+			Takes a single expression as a parameter and includes the template body
+			if the expression resolves to <code>true</code>.
+			<p/>
+			If the expression resolves to <code>false</code> then the body is skipped
+			and the next body-alt is executed, if present.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{if $foo}
+			<br/>
+			&nbsp;&nbsp; {$foo}
+			<br/>
+			{elseif $bar}
+			<br/>
+			&nbsp;&nbsp; {$bar}
+			<br/>
+			{else}
+			<br/>
+			&nbsp;&nbsp; Neither foo nor bar are defined
+			<br/>
+			{/if}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: else
+	**************************************************************************
+	 -->
+	<action
+		name="else"
+		class="com.inamik.template.lib.main.actions.Else"
+		parmType="empty"
+		blockType="body-alt"
+		bodyContent="template"
+	>
+		<descripton>
+		<![CDATA[
+			A final (default) body-alt for body tags that suppot body-alts.
+			<p/>
+			Although most typically used in if-else constructs, this body-alt tag
+			can be used as a final body-alt tag for any body action tag that supports
+			body-alts.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{if $foo}
+			<br/>
+			&nbsp;&nbsp; {$foo}
+			<br/>
+			{else}
+			<br/>
+			&nbsp;&nbsp; Foo not defined
+			<br/>
+			{/if}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: unless
+	**************************************************************************
+	 -->
+	<action
+		name="unless"
+		class="com.inamik.template.lib.main.actions.Unless"
+		parmType="expression"
+		blockType="body"
+		bodyContent="template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to conditionally include a template body.
+			<p/>
+			Takes a single expression as a parameter and includes the template body
+			if the expression resolves to <code>false</code>.
+			<p/>
+			If the expression resolves to <code>true</code> then the body is skipped
+			and first body-alt is executed, if present.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{unless $foo}
+			<br/>
+			&nbsp;&nbsp; foo not defined
+			<br/>
+			{/unless}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: elseunless
+	**************************************************************************
+	 -->
+	<action
+		name        = "elseunless"
+		class       = "com.inamik.template.lib.main.actions.ElseUnless"
+		parmType    = "expression"
+		blockType   = "body-alt"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to chain an {unless} statement as a body-alt.
+			<p/>
+			Although most typically used in if-elseif-else constructs, this action
+			tag can be used anywherea a body-alt is accepted.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{unldess $foo}
+			<br/>
+			&nbsp;&nbsp; {$foo}
+			<br/>
+			{elseif $bar}
+			<br/>
+			&nbsp;&nbsp; {$bar}
+			<br/>
+			{else}
+			<br/>
+			&nbsp;&nbsp; Neither foo nor bar are defined
+			<br/>
+			{/if}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: while
+	**************************************************************************
+	 -->
+	<action
+		name       = "while"
+		class      = "com.inamik.template.lib.main.actions.While"
+		parmType   = "expression"
+		blockType  = "body"
+		bodyContent= "template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to continuously include a template body while a condition
+			is met.
+			<p/>
+			Takes a single expression as a parameter and continuously includes the
+			template body while the expression resolves to <code>true</code>.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{set counter = 0}
+			<br/>
+			{while $counter < 10}
+			<br/>
+			&nbsp;&nbsp; {$counter}
+			<br/>
+			&nbsp;&nbsp; {set counter = $counter + 1}
+			<br/>
+			{/while}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: until
+	**************************************************************************
+	 -->
+	<action
+		name        = "until"
+		class       = "com.inamik.template.lib.main.actions.Until"
+		parmType    = "expression"
+		blockType   = "body"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Allows you to continuously include a template body until a condition
+			is met.
+			<p/>
+			Takes a single expression as a parameter and continuously includes the
+			template body until the expression resolves to <code>true</code>.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{set counter = 0}
+			<br/>
+			{until $counter >= 10}
+			<br/>
+			&nbsp;&nbsp; {$counter}
+			<br/>
+			&nbsp;&nbsp; {set counter = $counter + 1}
+			<br/>
+			{/until}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: set
+	**************************************************************************
+	 -->
+	<action
+		name        = "set"
+		class       = "com.inamik.template.lib.main.actions.Set"
+		parmType    = "attributes"
+		blockType   = "empty"
+		bodyContent = "empty"
+	>
+		<descripton>
+		<![CDATA[
+			Set template variables.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{set foo="foo", bar="bar"}
+			<br/>
+			Hello, {$foo}
+			<br/>
+			Goodbye, {$bar}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: unset
+	**************************************************************************
+	 -->
+	<action
+		name        = "unset"
+		class       = "com.inamik.template.lib.main.actions.Unset"
+		parmType    = "id-list"
+		blockType   = "empty"
+		bodyContent = "empty"
+	>
+		<descripton>
+		<![CDATA[
+			Remove template variables.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{unset foo, bar}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: capture
+	**************************************************************************
+	 -->
+	<action
+		name        = "capture"
+		class       = "com.inamik.template.lib.main.actions.Capture"
+		parmType    = "attributes"
+		blockType   = "body"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Capture a template block and store it as a variable.
+		]]>
+		</descripton>
+ 		<attribute name="id" required="true">
+ 			The variable name to store the captured content under.
+ 		</attribute>
+		<example>
+		<![CDATA[
+			{capture id='capture'}
+			<br/>
+			&nbsp;&nbsp; Hello, {$name}
+			<br/>
+			{/capture}
+			<br/>
+			{$capture}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: print
+	**************************************************************************
+	 -->
+	<action
+		name="print"
+		class="com.inamik.template.lib.main.actions.Print"
+		parmType="expression-list"
+		blockType="empty"
+		bodyContent="text"
+	>
+		<descripton>
+		<![CDATA[
+			Send data to the template's output stream.
+			<p/>
+			This action may seem useless in light of the variable and string tags,
+			but it can come in handy when trying to output results from functions.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{print lower("Hello "), upper($name) }
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: out
+	**************************************************************************
+	 -->
+	<action
+		name        = "out"
+		class       = "com.inamik.template.lib.main.actions.Print"
+		parmType    = "expression-list"
+		blockType   = "empty"
+		bodyContent = "text"
+	>
+		<descripton>
+		<![CDATA[
+			This is simply an alias for the {print} action.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{out lower("Hello "), upper($name) }
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: include
+	**************************************************************************
+	 -->
+	<action
+		name        = "include"
+		class       = "com.inamik.template.lib.main.actions.Include"
+		parmType    = "attributes"
+		blockType   = "empty"
+		bodyContent = "empty"
+	>
+		<descripton>
+		<![CDATA[
+			Include a template, either from a file or a resource on the
+			classpath.
+			<p/>
+			The included template can optionally be stored in a template variable
+			instead of being sent to the template's output stream.
+			<p/>
+			Any attributes provided other than the ones mentioned below will be used
+			to set variables for the included template.  See the examples for more
+			information.
+		]]>
+		</descripton>
+		<attribute name="file" required="false">
+		<![CDATA[
+			Must supply one of 'file' or 'resource' attributes.
+			<p/>
+			When including a template from a file, the attribute specifies the file to include.
+		]]>
+		</attribute>
+		<attribute name="resource" required="false">
+		<![CDATA[
+			Must supply one of 'resource' or 'file' attributes.
+			<p/>
+			When including a template from the classpath, the attribute specifies the resource to include.
+		]]>
+		</attribute>
+		<attribute name="id" required="false">
+		<![CDATA[
+			If present, stores the processed template in the specified variable.
+		]]>
+		</attribute>
+		<any-attribute>
+		<![CDATA[
+			Any attributes provided other than the ones named above will be used to set variables for the included template.
+		]]>
+ 		</any-attribute>
+		<example title="File Example With Extra Variables">
+		<![CDATA[
+			{include file="include.tpl" foo="foo" bar="bar"}
+		]]>
+		</example>
+		<example title="Resource Example With 'id' Attribute">
+		<![CDATA[
+			{include file="include.tpl" id=include}
+			<br/>
+			{$include}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: macro
+	**************************************************************************
+	 -->
+	<action
+		name        = "macro"
+		class       = "com.inamik.template.lib.main.actions.Macro"
+		parmType    = "attributes"
+		blockType   = "body"
+		bodyContent = "macro"
+	>
+		<descripton>
+		<![CDATA[
+			Capture a template block and store it as a Macro.
+			<p/>
+			Macros allow you to re-execute the template body multiple times, possibly
+			generating different output each time.
+			<p/>
+			Macros are referenced just like variables.  See the example for more
+			information.
+		]]>
+		</descripton>
+		<attribute name="id" required="true">
+		<![CDATA[
+			The macro name to store the captured content under.
+		]]>
+		</attribute>
+		<example>
+		<![CDATA[
+			{macro id='macro'}
+			<br/>
+			&nbsp;&nbsp; Hello, {$name}
+			<br/>
+			{/macro}
+			<br/>
+			{set name='foo'}
+			<br/>
+			{$macro}
+			<br/>
+			{set name='bar'}
+			<br/>
+			{$macro}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: br
+	**************************************************************************
+	 -->
+	<action
+		name        = "br"
+		class       = "com.inamik.template.lib.main.actions.NewLine"
+		parmType    = "empty"
+		blockType   = "empty"
+		bodyContent = "empty"
+	>
+		<descripton>
+		<![CDATA[
+			Print a newline ("\n")to the template's output stream.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			Hello, {$name}{br}Goodbye, now.
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: text
+	**************************************************************************
+	 -->
+	<action
+		name        = "text"
+		class       = "com.inamik.template.lib.main.actions.Text"
+		parmType    = "attributes"
+		blockType   = "body"
+		bodyContent = "text"
+	>
+		<descripton>
+		<![CDATA[
+			Capture a text block and store it as a variable.
+			<p/>
+			The action body is treated as plain text and no template processing
+			is performed.
+		]]>
+		</descripton>
+		<attribute name="id" required="true">
+		<![CDATA[
+			The variable name to store the captured text under.
+		]]>
+		</attribute>
+		<example>
+		<![CDATA[
+			{text id='text'}
+			<br/>
+			&nbsp;&nbsp; Hello, {$name}
+			<br/>
+			{/text}
+			<br/>
+			{$text}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Action: trim
+	**************************************************************************
+	 -->
+	<action
+		name        = "trim"
+		class       = "com.inamik.template.lib.main.actions.Trim"
+		parmType    = "attributes"
+		blockType   = "body"
+		bodyContent = "template"
+	>
+		<descripton>
+		<![CDATA[
+			Capture a block, trim each line, and either print it or
+			store it as a variable.
+		]]>
+		</descripton>
+		<attribute name="id" required="false">
+		<![CDATA[
+			The variable name to store the captured text under.
+		]]>
+		</attribute>
+		<example>
+		<![CDATA[
+			{trim id='trimText'}
+
+			   <br/>
+			I need text with no leading/trailing space and normalized
+			leading space.
+			   <br/>
+			{/trim}
+			<br/>
+			{$trimText}
+		]]>
+		</example>
+	</action>
+
+	<!--
+	**************************************************************************
+	* Function: lower
+	**************************************************************************
+	 -->
+	<function
+		name     = "lower"
+		class    = "com.inamik.template.lib.main.filters.Lower"
+	>
+		<descripton>
+		<![CDATA[
+			Transform the argument into lowercase.
+			<p/>
+			This filter resolves the argument to a String, then executes
+			<code>string.toLowerCase()</code>, returning the resulting String.
+		]]>
+		</descripton>
+		<parameter position="1" required="true">
+			That argument to be transformed into lowercase.
+		</parameter>
+		<example>
+		<![CDATA[
+			{print lower($foo) }
+		]]>
+		</example>
+	</function>
+
+	<!--
+	**************************************************************************
+	* Function: upper
+	**************************************************************************
+	 -->
+	<function
+		name  = "upper"
+		class = "com.inamik.template.lib.main.filters.Upper"
+	>
+		<descripton>
+		<![CDATA[
+			Transform the argument into uppercase.
+			<p/>
+			This filter resolves the argument to a String, then executes
+			<code>string.toUpperCase()</code>, returning the resulting String.
+		]]>
+		</descripton>
+		<parameter position="1" required="true" />
+		<example>
+		<![CDATA[
+			{out upper($foo) }
+		]]>
+		</example>
+	</function>
+
+	<!--
+	**************************************************************************
+	* Function: size
+	**************************************************************************
+	 -->
+	<function
+		name  = "size"
+		class = "com.inamik.template.lib.main.functions.Size"
+	>
+		<descripton>
+		<![CDATA[
+			Get the size of the specified parameter.
+			<p/>
+			If the parameter resolves to a container who's size can be determined
+			(i.e. <code>TemplateVariable.isSizeable() == true</code>), then the size is
+			determined by calling <code>TemplateVariable.size()</code>.
+			<p/>
+			if the parameter resolves to a String, then the size is determined by
+			<code>string.length()</code>.
+			<p/>
+			I the parameter does not match any of the above rules, then the size is
+			deemed to be zero (0).
+		]]>
+		</descripton>
+		<parameter position="1" required="true" />
+		<example>
+		<![CDATA[
+			There are exactly {out size($list)} elements in the list.
+		]]>
+		</example>
+	</function>
+
+	<!--
+	**************************************************************************
+	* Function: boolean
+	**************************************************************************
+	 -->
+	<function
+		name  = "boolean"
+		class = "com.inamik.template.lib.main.functions.Boolean"
+	>
+		<descripton>
+		<![CDATA[
+			Evaluate a parameter as a boolean.
+			<p/>
+			The evaluation is achived via <code>TemplateVariable.asBoolean()</code>.
+			<p/>
+			The usefullness of this function is questionable, but I'm supplying it
+			just the same.
+		]]>
+		</descripton>
+		<parameter position="1" required="true" />
+	</function>
+
+	<!--
+	**************************************************************************
+	* Filter: lower
+	**************************************************************************
+	 -->
+	<filter
+		name  = "lower"
+		class = "com.inamik.template.lib.main.filters.Lower"
+	>
+		<descripton>
+		<![CDATA[
+			Transform the filter target into lowercase.
+			<p/>
+			This filter resolves the filter target to a String, then executes
+			<code>string.toLowerCase()</code>, returning the resulting String.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{$foo |lower}
+		]]>
+		</example>
+	</filter>
+
+	<!--
+	**************************************************************************
+	* Filter: upper
+	**************************************************************************
+	 -->
+	<filter
+		name  = "upper"
+		class = "com.inamik.template.lib.main.filters.Upper"
+	>
+		<descripton>
+		<![CDATA[
+			Transform the filter target into upercase.
+			<p/>
+			This filter resolves the filter target to a String, then executes
+			<code>string.toUpperCase()</code>, returning the resulting String.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{$foo |upper}
+		]]>
+		</example>
+	</filter>
+
+	<!--
+	**************************************************************************
+	* Filter: inTrim
+	**************************************************************************
+	 -->
+	<filter
+		name  = "inTrim"
+		class = "com.inamik.template.lib.main.filters.InTrim"
+	>
+		<descripton>
+		<![CDATA[
+			Removes leading and trailing whitespace, and also converts
+			any inner occurrences of 1 or more whitespace characters into a
+			single space character.
+		]]>
+		</descripton>
+		<example>
+		<![CDATA[
+			{$foo |inTrim}
+		]]>
+		</example>
+	</filter>
+
+	<!--
+	**************************************************************************
+	* Filter: default
+	**************************************************************************
+	 -->
+	<filter
+		name  = "default"
+		class = "com.inamik.template.lib.main.filters.Default"
+	>
+		<descripton>
+		<![CDATA[
+			If the filter target is empty, scan the list of extra parameters,
+			returning the first non-empty parameter, or <code>null</code> if all
+			extra parameters are empty.
+			<p/>
+			The test for emptyness differs from the test for booleanness that can be
+			achieved with <code>{if $foo || $bar}</code>.
+			<p/>
+			In this filter, an expression is considered empty if it resolves to
+			<code>null</code> or to the empty String ("").
+		]]>
+		</descripton>
+		<parameter position="1" required="true">
+			Need at least one (1) alternative to justify using the filter.
+		</parameter>
+		<any-parameter />
+		<example>
+		<![CDATA[
+			{$foo |default($bar1, $bar2)}
+		]]>
+		</example>
+	</filter>
+</template-lib>

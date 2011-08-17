@@ -1,0 +1,443 @@
+<?xml version="1.0"?>
+<!-- $Id: build-grammars.xml,v 1.8 2006-08-22 03:28:14 dave Exp $ -->
+<project name="TemplateEngine-Grammars" basedir="." default="all">
+	<!-- load properties -->
+	<property file="build.properties" />
+
+	<!--  Ensure source dir is defined -->
+	<fail unless="src.dir"     message="Missing Property: src.dir" />
+	<fail unless="src.gen.dir" message="Missing Property: src.gen.dir" />
+
+	<!--  Ensure build dir is defined -->
+	<fail unless="build.dir" message="Missing Property: build.dir" />
+
+	<!-- set classpath -->
+	<path id="build.cp">
+		<pathelement path="${java.class.path}"/>
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="lib-build">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- init -->
+	<target name="init" unless="init.built">
+		<!--  Ensure antlr package dir is defined -->
+		<fail unless="antlr.package.dir" message="Missing Property: antlr.package.dir" />
+
+		<!-- Ensure ANTLR is available -->
+		<available classname="antlr.Tool" property="antlr.available" classpathref="build.cp" />
+		<fail unless="antlr.available" message="ANTLR not available on build.cp" />
+
+		<!-- make sure working directory is created -->
+		<mkdir dir="${src.gen.dir}"        />
+		<mkdir dir="${build.dir}"          />
+		<mkdir dir="${build.dir}/grammars" />
+
+		<!-- set init.built so multiple calls won't waste time -->
+		<property name="init.built" value="true"/>
+	</target>
+
+	<!-- final -->
+	<target name="final" depends="init">
+		<mkdir dir="${src.gen.dir}/${antlr.package.dir}" />
+		<move todir="${src.gen.dir}/${antlr.package.dir}" verbose="false">
+			<fileset dir="${build.dir}/grammars" includes="*.java" />
+		</move>
+	</target>
+
+	<!-- all -->
+	<target name="all" depends="init,lexers,parsers,final" description="Build everything." />
+
+	<!--  lexers -->
+	<target name="lexers" depends="init,fileLexer,qstringLexer,sqStringLexer,tagLexer,variableExpressionLexer,textBodyLexer" unless="lexers.built">
+		<property name="lexers.built" value="true" />
+	</target>
+
+	<!-- parsers -->
+	<target name="parsers" depends="init,fileParser,qstringParser,sqStringParser,tagParser,variableExpressionParser,textBodyParser" unless="parsers.built">
+		<property name="parsers.built" value="true" />
+	</target>
+
+	<!-- file lexer -->
+	<target name="fileLexer" depends="init,grammars.uptodate" unless="fileLexer.built">
+		<copy file="grammars/FileLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/FileLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="fileLexer.built" value="true" />
+	</target>
+
+	<!-- qstring lexer -->
+	<target name="qstringLexer" depends="init,grammars.uptodate" unless="qstringLexer.built">
+		<copy file="grammars/QStringLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/QStringLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="qstringLexer.built" value="true" />
+	</target>
+
+	<!-- sqString lexer -->
+	<target name="sqStringLexer" depends="init,grammars.uptodate" unless="sqStringLexer.built">
+		<copy file="grammars/SQStringLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/SQStringLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="sqStringLexer.built" value="true" />
+	</target>
+
+	<!-- tag lexer -->
+	<target name="tagLexer" depends="init,grammars.uptodate" unless="tagLexer.built">
+		<copy file="grammars/TagLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/TagLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="tagLexer.built" value="true" />
+	</target>
+
+	<!-- variable id lexer -->
+	<target name="variableExpressionLexer" depends="init,grammars.uptodate" unless="variableExpressionLexer.built">
+		<copy file="grammars/VariableExpressionLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/VariableExpressionLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="variableExpressionLexer.built" value="true" />
+	</target>
+
+	<!-- text body lexer -->
+	<target name="textBodyLexer" depends="init,grammars.uptodate" unless="textBodyLexer.built">
+		<copy file="grammars/TextBodyLexer.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/TextBodyLexer.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="textBodyLexer.built" value="true" />
+	</target>
+
+	<!-- file parser -->
+	<target name="fileParser" depends="init,grammars.uptodate,fileLexer" unless="fileParser.built">
+		<copy file="grammars/FileParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/FileParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="fileParser.built" value="true" />
+	</target>
+
+	<!-- qstring parser -->
+	<target name="qstringParser" depends="init,grammars.uptodate,qstringLexer" unless="qstringParser.built">
+		<copy file="grammars/QStringParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/QStringParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="qstringParser.built" value="true" />
+	</target>
+
+	<!-- sqString parser -->
+	<target name="sqStringParser" depends="init,grammars.uptodate,sqStringLexer" unless="sqStringParser.built">
+		<copy file="grammars/SQStringParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/SQStringParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="sqStringParser.built" value="true" />
+	</target>
+
+	<!-- tag parser -->
+	<target name="tagParser" depends="init,grammars.uptodate,tagLexer" unless="tagParser.built">
+		<copy file="grammars/TagParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/TagParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="tagParser.built" value="true" />
+	</target>
+
+	<!-- variable id parser -->
+	<target name="variableExpressionParser" depends="init,grammars.uptodate,variableExpressionLexer" unless="variableExpressionParser.built">
+		<copy file="grammars/VariableExpressionParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/VariableExpressionParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="variableExpressionParser.built" value="true" />
+	</target>
+
+	<!-- variable id parser -->
+	<target name="textBodyParser" depends="init,grammars.uptodate,textBodyLexer" unless="textBodyParser.built">
+		<copy file="grammars/TextBodyParser.g" todir="${build.dir}/grammars" />
+		<antlr target="${build.dir}/grammars/TextBodyParser.g" trace="${antlr.trace}">
+			<classpath refid="build.cp" />
+		</antlr>
+		<property name="textBodyParser.built" value="true" />
+	</target>
+
+	<!-- grammars dependset -->
+	<target name="grammars.uptodate" unless="grammars.uptodate.built">
+		<!-- file lexer -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "FileLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "FileLexer.java, FileLexerTokenTypes.java, FileParser.java, FileParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "FileLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "fileLexer.built"
+			srcfile    = "grammars/FileLexer.g"
+			targetfile = "${build.dir}/grammars/FileLexer.g"
+		/>
+
+		<!-- file parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "FileLexer.g,FileParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "FileParser.java, FileParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "FileParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "fileParser.built"
+			srcfile    = "grammars/FileParser.g"
+			targetfile = "${build.dir}/grammars/FileParser.g"
+		/>
+
+		<!-- qstring lexer -->
+		<dependset>
+			<srcfilelist
+				dir="grammars"
+				files="QStringLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "QStringLexer.java, QStringLexerTokenTypes.java, QStringParser.java, QStringParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "QStringLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "qstringLexer.built"
+			srcfile    = "grammars/QStringLexer.g"
+			targetfile = "${build.dir}/grammars/QStringLexer.g"
+		/>
+
+		<!-- qstring parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "QStringLexer.g,QStringParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "QStringParser.java, QStringParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "QStringParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "qstringParser.built"
+			srcfile    = "grammars/QStringParser.g"
+			targetfile = "${build.dir}/grammars/QStringParser.g"
+		/>
+
+		<!-- sqString lexer -->
+		<dependset>
+			<srcfilelist
+				dir="grammars"
+				files="SQStringLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "SQStringLexer.java, SQStringLexerTokenTypes.java, SQStringParser.java, SQStringParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "SQStringLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "sqStringLexer.built"
+			srcfile    = "grammars/SQStringLexer.g"
+			targetfile = "${build.dir}/grammars/SQStringLexer.g"
+		/>
+
+		<!-- sqString parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "SQStringLexer.g,SQStringParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "SQStringParser.java, SQStringParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "SQStringParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "sqStringParser.built"
+			srcfile    = "grammars/SQStringParser.g"
+			targetfile = "${build.dir}/grammars/SQStringParser.g"
+		/>
+
+		<!-- tag lexer -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "TagLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "TagLexer.java, TagLexerTokenTypes.java, TagParser.java, TagParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "TagLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "tagLexer.built"
+			srcfile    = "grammars/TagLexer.g"
+			targetfile = "${build.dir}/grammars/TagLexer.g"
+		/>
+
+		<!-- tag parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "TagLexer.g,TagParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "TagParser.java, TagParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "TagParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "tagParser.built"
+			srcfile    = "grammars/TagParser.g"
+			targetfile = "${build.dir}/grammars/TagParser.g"
+		/>
+
+		<!-- variable expression lexer -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "VariableExpressionLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "VariableExpressionLexer.java, VariableExpressionLexerTokenTypes.java, VariableExpressionParser.java, VariableExpressionParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "VariableExpressionLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "variableExpressionLexer.built"
+			srcfile    = "grammars/VariableExpressionLexer.g"
+			targetfile = "${build.dir}/grammars/VariableExpressionLexer.g"
+		/>
+
+		<!-- variable expression parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "VariableExpressionLexer.g,VariableExpressionParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "VariableExpressionParser.java, VariableExpressionParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "VariableExpressionParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "variableExpressionParser.built"
+			srcfile    = "grammars/VariableExpressionParser.g"
+			targetfile = "${build.dir}/grammars/VariableExpressionParser.g"
+		/>
+
+		<!-- text body lexer -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "TextBodyLexer.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "TextBodyLexer.java, TextBodyLexerTokenTypes.java, TextBodyParser.java, TextBodyParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "TextBodyLexer.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "textBodyLexer.built"
+			srcfile    = "grammars/TextBodyLexer.g"
+			targetfile = "${build.dir}/grammars/TextBodyLexer.g"
+		/>
+
+		<!-- text body parser -->
+		<dependset>
+			<srcfilelist
+				dir   = "grammars"
+				files = "TextBodyLexer.g,TextBodyParser.g"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${antlr.package.dir}"
+				files = "TextBodyParser.java, TextBodyParserTokenTypes.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/grammars"
+				files = "TextBodyParser.g"
+			/>
+		</dependset>
+		<uptodate
+			property   = "textBodyParser.built"
+			srcfile    = "grammars/TextBodyParser.g"
+			targetfile = "${build.dir}/grammars/TextBodyParser.g"
+		/>
+
+		<property name="grammars.uptodate.built" value="true" />
+	</target>
+
+	<target name="clean-all" depends="clean-grammars,clean-src" />
+
+	<target name="clean" depends="clean-grammars" />
+
+	<target name="clean-grammars">
+		<delete dir="${build.dir}/grammars" />
+	</target>
+
+	<target name="clean-src">
+		<!--  Ensure grammar package is defined -->
+		<fail unless="antlr.package.dir" message="Missing Property: antlr.package.dir" />
+		<delete dir="${src.gen.dir}/{${antlr.package.dir}" />
+	</target>
+
+</project>

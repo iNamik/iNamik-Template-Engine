@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!-- $Id: build-jaxb.xml,v 1.3 2006-08-22 03:28:14 dave Exp $ -->
+<project name="TemplateEngine-Jaxb" basedir="." default="all">
+	<!-- load properties -->
+	<property file="build.properties" />
+
+	<!--  Ensure source gen dir is defined -->
+	<fail unless="src.gen.dir" message="Missing Property: src.gen.dir" />
+
+	<!--  Ensure build dir is defined -->
+	<fail unless="build.dir" message="Missing Property: build.dir" />
+
+	<!-- set classpath -->
+	<path id="build.cp">
+		<pathelement path="${java.class.path}"/>
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="lib-build">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- init -->
+	<target name="init" unless="init.built">
+
+		<!--  Ensure jaxb package is defined -->
+		<fail unless="jaxb.package" message="Missing Property: jaxb.package" />
+
+		<mkdir dir="${src.gen.dir}/${jaxb.package.dir}"        />
+		<mkdir dir="${src.gen.dir}/${jaxb.package.dir}/lib"    />
+		<mkdir dir="${src.gen.dir}/${jaxb.package.dir}/config" />
+
+		<!-- Ensure XJC is available -->
+		<available classname="com.sun.tools.xjc.XJCTask" property="jaxb.available" classpathref="build.cp" />
+		<fail unless="jaxb.available" message="JAXB not available" />
+
+		<!-- Define XJC Ant Task -->
+		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		  <classpath refid="build.cp" />
+		</taskdef>
+
+		<!-- make sure working directory is created -->
+		<mkdir dir="${build.dir}"      />
+		<mkdir dir="${build.dir}/schema" />
+
+		<!-- set init.built so multiple calls won't waste time -->
+		<property name="init.built" value="true"/>
+	</target>
+
+	<!-- final -->
+	<target name="final" depends="init">
+	</target>
+
+	<!-- all -->
+	<target name="all" depends="init,config,lib,final" description="Build everything." />
+
+	<!-- config -->
+	<target name="config" depends="init,jaxb.uptodate" unless="config.built">
+		<copy file="schema/Template-Config.xsd" todir="${build.dir}/schema" />
+		<xjc schema="${build.dir}/schema/Template-Config.xsd" destdir="${src.gen.dir}" package="${jaxb.package}.config" />
+		<property name="config.built" value="true" />
+	</target>
+
+	<!-- lib -->
+	<target name="lib" depends="init,jaxb.uptodate" unless="lib.built">
+		<copy file="schema/Template-Lib.xsd" todir="${build.dir}/schema" />
+		<xjc schema="${build.dir}/schema/Template-Lib.xsd" destdir="${src.gen.dir}" package="${jaxb.package}.lib" />
+		<property name="lib.built" value="true" />
+	</target>
+
+	<!-- Jaxb dependset -->
+	<target name="jaxb.uptodate" unless="jaxb.uptodate.built">
+		<!-- config -->
+		<dependset>
+			<srcfilelist
+				dir   = "schema"
+				files = "Template-Config.xsd"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${jaxb.package.dir}/config"
+				files = "ObjectFactory.java, TemplateConfig.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/schema"
+				files = "Template-Config.xsd"
+			/>
+		</dependset>
+		<uptodate
+			property   = "config.built"
+			srcfile    = "schema/Template-Config.xsd"
+			targetfile = "${build.dir}/schema/Template-Config.xsd"
+		/>
+
+		<!-- lib -->
+		<dependset>
+			<srcfilelist
+				dir   = "schema"
+				files = "Template-Lib.xsd"
+			/>
+			<targetfilelist
+				dir   = "${src.gen.dir}/${jaxb.package.dir}/lib"
+				files = "ObjectFactory.java, TemplateLib.java"
+			/>
+			<targetfilelist
+				dir   = "${build.dir}/schema"
+				files = "Template-Lib.xsd" />
+		</dependset>
+		<uptodate
+			property   = "lib.built"
+			srcfile    = "schema/Template-Lib.xsd"
+			targetfile = "${build.dir}/schema/Template-Lib.xsd"
+		/>
+
+		<property name="jaxb.uptodate.built" value="true" />
+	</target>
+
+	<target name="clean-all" depends="clean-jaxb,clean-src" />
+
+	<target name="clean" depends="clean-jaxb" />
+
+	<target name="clean-jaxb">
+		<delete dir="${build.dir}/schema" />
+	</target>
+
+	<target name="clean-src">
+		<!--  Ensure grammar package is defined -->
+		<fail unless="jaxb.package.dir" message="Missing Property: grammars.package" />
+		<delete dir="{$src.gen.dir}/${jaxb.package.dir}" />
+	</target>
+
+</project>

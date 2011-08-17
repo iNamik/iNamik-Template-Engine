@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-gen"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/activation-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-bean-collections-1.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-core-1.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/ecj-3.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-core-2.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-api-2.2.1_20100511.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-impl-2.2.1_20100511.jar"/>
+	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="lib-build/jaxb-xjc-2.2.1_20100511.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

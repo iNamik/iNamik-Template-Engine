@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+$Id: inamik_template_engine-sample.xml,v 1.3 2006-08-21 03:07:12 dave Exp $
+
+Sample Template Engine Configuration
+
+WARNING - Please do not modify 'inamik_template_engine-sample.xml'.
+          Instead, copy the file to 'inamik_template_engine.xml'
+          and modify the copy.
+
+applicationRoot
+~~~~~~~~~~~~~~~
+ * Required   : No
+ * Default    : "."
+ * Description: The runtime root path for your application.  Typically it is
+                the path that contains the 'templateRoot' and, if caching is
+                enabled, the 'diskRoot'
+
+templateRoot
+~~~~~~~~~~~~
+ * Required   : Yes
+ * Description: The template root path.  This can be either a relative or an
+                absolute path. If a relative path is provided, then it is
+                assumed to be relative to the 'applicationRoot'
+
+tagDelimeter
+~~~~~~~~~~~~
+ * Required   : No
+ * Values     : CURLY | CURLY_CURLY | ANGLE_PERCENT
+ * Default    : CURLY
+ * Description: This allows you to specify the delimeter used to define tags
+                within your templates.  Acceptable values are:
+
+                CURLY         - Tags are delimeted with '{'  and '}'
+                CURLY_CURLY   - Tags are delimeted with '{{' and '}}'
+                ANGLE_PERCENT - Tags are delimeted with '<%' and '%>'
+
+useDefaultLib
+~~~~~~~~~~~~~
+ * Required   : No
+ * Values     : true | false | yes | no
+ * Default    : true
+ * Description: Specifies whether or not to automatically include the default
+                taglib.  Acceptable values are:
+
+debug
+~~~~~~~~~~~~~
+ * Required   : No
+ * Values     : true | false | yes | no
+ * Default    : false
+ * Description: Specifies whether or not the parser generates debug
+                information.  This option creates very verbose output and is
+                should probably not be enabled by an average user.
+-->
+<template-config
+	applicationRoot = "."
+	templateRoot    = "/templates"
+	tagDelimeter    = "CURLY"
+	useDefaultLib   = "true"
+	debug           = "false"
+>
+	<!--
+	The 'cache' element is optional.  If not provided, the template engine
+	will use a hashtable of weak references in order to provide a
+	simple, efficient caching mechanism.  If you want more robust caching,
+	or persistent caching, then you will need to enable and configure the
+	cache element.
+
+	All of the attributes for the cache element are optional, and you can
+	create a functional in-memory cache with just the element
+
+	  <cache />
+
+	iNamik Template Engine uses Easy Hibernate Cache.  If you are familiar
+	with EHCache then you will recognize these attribute options, as they
+	map directly to the EHCache configuration options.
+
+	see http://ehcache.sourceforge.net for more information on EHCache
+
+	name
+	~~~~
+	 * Required   : No
+	 * Default    : "default"
+	 * Description: The name is most important when you are using multiple
+	                template engine instances with different cache
+	                configurations.  If you use the same name as an
+	                already loaded cache configuration, the interpreter
+	                will assume you want to re-use that configuration.
+	                This feature can come in handy in situations where you
+	                really do want to use the same cache configuration
+	                across different template engine configurations.
+
+	                Just to be clear: If you are running multiple template
+	                engine instances with different cache configurations,
+	                make sure each configuration has a unique 'name'
+
+	                If you're just using a single configuration, then the
+	                default name ('defaut') should work fine.
+
+	 diskExpiryThreadIntervalSeconds
+	 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	  * Required   : No
+	  * Default    : 120
+	  * Description: The interval in seconds between runs of the disk
+	                 expiry thread. This is not the same thing as time to
+	                 live or time to idle. When the thread runs it checks
+	                 these things. So this value is how often we check for
+	                 expiry.
+
+	diskPersistent
+	~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Values     : true | false | yes | no
+	 * Default    : false
+	 * Description: For caches that overflow to disk, does the disk cache
+	                persist between JVM instances.
+
+	diskRoot
+	~~~~~~~~
+	 * Required   : No
+	 * Default    : N/A
+	 * Description: The root directory in which to create the cache data
+	                and index files.
+
+	                Multiple cache configurations can share the same
+	                disk root, as the 'name' will be incorperated into the
+	                cache data and index files.
+
+	                If the specified folder is relative, then it is
+	                considered to be relative to the applicationRoot.
+
+	                In order to enable disk-caching, you have to set
+	                diskRoot as well as setting overflowToDisk="true"
+
+
+	eternal
+	~~~~~~~
+	 * Required   : No
+	 * Values     : true | false | yes | no
+	 * Default    : true
+	 * Description: Whether elements are non-expiring.
+
+	maxElementsInMemory
+	~~~~~~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Default    : 100
+	 * Description: The maximun number of elements the cache will keep in
+	                memory. Once this number is reached, new elements to
+	                the cache will cause older elements to either be
+	                evicted from the cache or, if enabled, spooled to disk.
+
+	                WARNING: This value should not be less than 1 as the cache
+	                         performance will be greatly affected.
+
+	memoryStoreEvictionPolicy
+	~~~~~~~~~~~~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Values     : LFU | LRU | FIFO
+	 * Default    : LFU
+	 * Description: The policy used to evict elements from the cache.
+	                This can be one of:
+
+	                  LRU  - least recently used
+	                  LFU  - least frequently used
+	                  FIFO - first in first out, the oldest element by
+	                         creation time
+
+	overflowToDisk
+	~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Values     : true | false | yes | no
+	 * Default    : false
+	 * Description: Whether cache elements in this cache overflow to disk.
+
+	                To enable disk-caching, you need to set overflowToDisk="true",
+	                as well as set a valid diskRoot.
+
+	timeToIdleSeconds
+	~~~~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Default    : 30
+	 * Description: The maximum amount of time, in seconds, between cache
+	                retrievals before an element expires.  Is only used if
+	                the element is not eternal.
+
+	timeToLiveSeconds
+	~~~~~~~~~~~~~~~~~
+	 * Required   : No
+	 * Default    : 300
+	 * Description: The maximum time, in seconds, between creation time and
+	                when an element expires.  Is only used if the element
+	                is not eternal.
+	-->
+<!--
+	<cache
+		name                            = "default"
+		diskExpiryThreadIntervalSeconds = "120"
+		diskPersistent                  = "false"
+		diskRoot                        = "/cache"
+		eternal                         = "true"
+		maxElementsInMemory             = "100"
+		memoryStoreEvictionPolicy       = "LFU"
+		overflowToDisk                  = "false"
+		timeToIdleSeconds               = "30"
+		timeToLiveSeconds               = "300"
+	/>
+-->
+
+	<!--
+	Tag libraries are included via the 'use-lib' element, supporting the
+	following attributes:
+
+	prefix
+	~~~~~~
+	 * Required   : No
+	 * Default    : main
+	 * Description: Allows you to assign a prefix, or 'namespace' to the tag
+	                library.  If the prefix is anything other than 'main',
+	                then your templates will need to use prefix:name in order
+	                to access tags within this taglib.
+
+	                NOTE: Prefixes are not exclusive.  That is, you can have
+	                multiple tag librariess sharing the same prefix.
+
+	file
+	~~~~
+	 * Required    : One of 'file' or 'resource'
+	 * Description : Specifies the location of a tag library on the filesystem.
+	                 This can be either a relative or an absolute path. If a
+	                 relative path is provided, then it is assumed to be
+	                 relative to the 'applicationRoot'
+
+	resource
+	~~~~~~~~
+	 * Required   : One of 'resource' or 'file'
+	 * Description: Specifies the location of a tag library on the classpath.
+
+	 The following is an example for including the default tag library:
+	-->
+<!--
+	<use-lib prefix="main" resource="com/inamik/template/lib/main/inamik_template_lib-main.xml" />
+-->
+</template-config>

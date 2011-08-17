@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: Template-Config.xsd,v 1.9 2006-08-21 03:07:12 dave Exp $ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="template-config">
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="cache" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:attribute name="name"                            type="xsd:string"  default="default" />
+						<xsd:attribute name="diskExpiryThreadIntervalSeconds" type="xsd:integer" default="120"     />
+						<xsd:attribute name="diskPersistent"                  type="xsd:boolean" default="false"   />
+						<xsd:attribute name="diskRoot"                        type="xsd:string"                    />
+						<xsd:attribute name="eternal"                         type="xsd:boolean" default="true"    />
+						<xsd:attribute name="maxElementsInMemory"             type="xsd:integer" default="100"     />
+						<xsd:attribute name="memoryStoreEvictionPolicy"                          default="LFU"      >
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="LRU"  />
+									<xsd:enumeration value="LFU"  />
+									<xsd:enumeration value="FIFO" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="overflowToDisk"    type="xsd:boolean" default="false" />
+						<xsd:attribute name="timeToIdleSeconds" type="xsd:integer" default="30"    />
+						<xsd:attribute name="timeToLiveSeconds" type="xsd:integer" default="300"   />
+					</xsd:complexType>
+				</xsd:element>
+
+				<xsd:element name="use-lib" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:attribute name="file"     type="xsd:string" use="optional"></xsd:attribute>
+						<xsd:attribute name="resource" type="xsd:string" use="optional"></xsd:attribute>
+						<xsd:attribute name="prefix"   type="xsd:string" use="optional" default="main"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+
+			<xsd:attribute name="applicationRoot"     use="optional" type="xsd:string" />
+			<xsd:attribute name="templateRoot"        use="required" type="xsd:string" />
+			<xsd:attribute name="useDefaultLib"       use="optional" type="xsd:boolean"  default="true" />
+			<xsd:attribute name="debug"               use="optional" type="xsd:boolean"  default="false" />
+			<xsd:attribute name="tagDelimeter"        use="optional" default="CURLY" >
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="CURLY"             />
+						<xsd:enumeration value="CURLY_CURLY"       />
+						<xsd:enumeration value="LESS_THAN_PERCENT" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: Template-Lib.xsd,v 1.9 2006-08-21 03:07:12 dave Exp $ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="template-lib">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:choice minOccurs="1" maxOccurs="unbounded">
+					<xsd:element name="action">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+								<xsd:element name="attribute"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+												<xsd:attribute name="name"    type="xsd:string"  use="required"                 />
+												<xsd:attribute name="required" type="xsd:boolean" use="optional" default="false" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="any-attribute" minOccurs="0" maxOccurs="1">
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string" />
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="example"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+										<xsd:attribute name="title" type="xsd:string" use="optional" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="type"  type="xsd:string" fixed="action"></xsd:attribute>
+							<xsd:attribute name="name"  type="xsd:string" use="required"></xsd:attribute>
+							<xsd:attribute name="class" type="xsd:string" use="required"></xsd:attribute>
+							<xsd:attribute name="parmType" use="optional" default="empty">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:NMTOKEN">
+										<xsd:enumeration value="empty"           />
+										<xsd:enumeration value="attributes"      />
+										<xsd:enumeration value="expression"      />
+										<xsd:enumeration value="expression-list" />
+										<xsd:enumeration value="id"              />
+										<xsd:enumeration value="id-list"         />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+							<xsd:attribute name="blockType" use="optional" default="empty">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:NMTOKEN">
+										<xsd:enumeration value="empty"     />
+										<xsd:enumeration value="block"     />
+										<xsd:enumeration value="block-alt" />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+							<xsd:attribute name="bodyContent" use="optional" default="empty">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:NMTOKEN">
+										<xsd:enumeration value="empty"    />
+										<xsd:enumeration value="template" />
+										<xsd:enumeration value="text"     />
+										<xsd:enumeration value="macro"    />
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="function">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+								<xsd:element name="parameter"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+												<xsd:attribute name="position"    type="xsd:int"  use="required"                 />
+												<xsd:attribute name="required" type="xsd:boolean" use="optional" default="false" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="any-parameter" minOccurs="0" maxOccurs="1">
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string" />
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="example"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+										<xsd:attribute name="title" type="xsd:string" use="optional" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="type"  type="xsd:string" fixed="function"></xsd:attribute>
+							<xsd:attribute name="name"  type="xsd:string" use="required"></xsd:attribute>
+							<xsd:attribute name="class" type="xsd:string" use="required"></xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="filter">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+								<xsd:element name="parameter"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+												<xsd:attribute name="position"    type="xsd:int"  use="required"                 />
+												<xsd:attribute name="required" type="xsd:boolean" use="optional" default="false" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="any-parameter" minOccurs="0" maxOccurs="1">
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string" />
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="example"  minOccurs="0" maxOccurs="unbounded" >
+									<xsd:complexType>
+										<xsd:simpleContent>
+											<xsd:extension base="xsd:string">
+										<xsd:attribute name="title" type="xsd:string" use="optional" />
+											</xsd:extension>
+										</xsd:simpleContent>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+							<xsd:attribute name="type"  type="xsd:string" fixed="filter"></xsd:attribute>
+							<xsd:attribute name="name"  type="xsd:string" use="required"></xsd:attribute>
+							<xsd:attribute name="class" type="xsd:string" use="required"></xsd:attribute>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

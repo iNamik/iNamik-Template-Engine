@@ -1,0 +1,402 @@
+<?xml version="1.0"?>
+<!-- $Id: build.xml,v 1.7 2006-08-22 03:28:14 dave Exp $ -->
+<project name="TemplateEngine" basedir="." default="all">
+	<!-- timestamps -->
+	<tstamp/>
+
+	<!-- load properties -->
+	<property file="build.properties" />
+
+	<!--  Ensure build version is defined -->
+	<fail unless="build.version" message="Missing Property: build.version" />
+
+	<!--  Ensure source dir is defined -->
+	<fail unless="src.dir" message="Missing Property: src.dir" />
+
+	<!--  Ensure source gen dir is defined -->
+	<fail unless="src.gen.dir" message="Missing Property: src.gen.dir" />
+
+	<!--  Ensure build dir is defined -->
+	<fail unless="build.dir" message="Missing Property: build.dir" />
+
+	<!--  Ensure dist dir is defined -->
+	<fail unless="dist.dir" message="Missing Property: dist.dir" />
+<!--
+	<property name="project.name" value="com.inamik.template-${build.version}" />
+-->
+
+	<property name="version.temp" value="VERSION-${build.version}.txt" />
+
+	<!-- set classpath -->
+	<path id="build.cp">
+		<pathelement path="${java.class.path}"/>
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="lib-build">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- init -->
+	<target name="init" unless="init.built">
+		<!-- make sure dist directory is created -->
+		<mkdir dir="${src.gen.dir}"   />
+		<mkdir dir="${dist.dir}"      />
+		<mkdir dir="${build.dir}"     />
+		<mkdir dir="${build.dir}/doc" />
+
+		<!-- set init.built so multiple calls won't waste time -->
+		<property name="init.built" value="true"/>
+	</target>
+
+	<!-- all -->
+	<target name="all" depends="init,grammars,jaxb,docs,jars,version,zips,tars" description="Build everything."/>
+
+	<!-- grammars -->
+	<target name="grammars" depends="init" unless="grammars.built">
+		<ant antfile="build-grammars.xml" target="all" inheritall="false"/>
+
+		<property name="grammars.built" value="true"/>
+	</target>
+
+	<!-- jaxb -->
+	<target name="jaxb" depends="init" unless="jaxb.built">
+		<ant antfile="build-jaxb.xml" target="all" inheritall="false"/>
+
+		<property name="grammars.built" value="true"/>
+	</target>
+
+	<!-- classes -->
+	<target name="classes" depends="init" unless="classes.built">
+		<mkdir dir="${build.dir}/classes" />
+		<javac
+			srcdir       = "${src.dir};${src.gen.dir}"
+			destdir      = "${build.dir}/classes"
+			source       = "1.5"
+			classpathref = "build.cp"
+			debug        = "on"
+		/>
+
+		<javac
+			srcdir       = "${src.gen.dir}"
+			destdir      = "${build.dir}/classes"
+			source       = "1.5"
+			classpathref = "build.cp"
+			debug        = "on"
+		/>
+
+		<!-- copy non-java files -->
+		<copy todir="${build.dir}/classes" verbose="true">
+			<fileset dir="${src.dir}" excludes="**/*.java"/>
+			<fileset dir="${src.gen.dir}" excludes="**/*.java"/>
+		</copy>
+
+		<property name="classes.built" value="true"/>
+	</target>
+
+	<!-- class dependset -->
+	<target name="classes.uptodate" unless="classes.uptodate.built">
+		<dependset>
+			<srcfileset
+				dir      = "${src.dir}"
+				includes = "**/*"
+			/>
+			<srcfileset
+				dir      = "${src.gen.dir}"
+				includes = "**/*"
+			/>
+			<targetfileset
+				dir      = "${build.dir}/classes"
+				includes = "**/*"
+			/>
+			<targetfilelist
+				dir   = "${dist.dir}"
+				files = "${project.name}.jar"
+			/>
+		</dependset>
+		<uptodate
+			property   = "classes.built"
+			targetfile = "${dist.dir}/${project.name}.jar"
+		>
+			<srcfiles
+				dir="${src.dir}"
+				includes="**/*"
+			/>
+			<srcfiles
+				dir="${src.gen.dir}"
+				includes="**/*"
+			/>
+		</uptodate>
+
+		<property name="classes.uptodate.built" value="true" />
+	</target>
+
+	<!-- jars -->
+	<target name="jars" depends="init,classes" unless="jars.built">
+		<jar destfile="${dist.dir}/${project.name}.jar" basedir="${build.dir}/classes">
+			<manifest>
+				<attribute name="Main-Class" value="com.inamik.template.Main"/>
+			</manifest>
+		</jar>
+
+		<property name="jars.built" value="true"/>
+	</target>
+
+	<!-- tars -->
+	<target name="tars" depends="init,grammars,docs,jars" unless="tars.built">
+		<!-- src -->
+		<tar destfile="${dist.dir}/${project.name}-src.tar.gz" compression="gzip">
+			<!-- build -->
+			<tarfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "build.xml,build-grammars.xml,build-jaxb.xml,build.properties"
+			/>
+			<!-- doc -->
+<!--
+			<tarfileset
+				dir    = "doc"
+				prefix = "${project.name}/doc"
+			/>
+-->
+			<!-- grammars -->
+			<tarfileset
+				dir="grammars"
+				prefix="${project.name}/grammars"
+			/>
+			<!-- schema -->
+			<tarfileset
+				dir="schema"
+				prefix="${project.name}/schema"
+			/>
+			<!-- src -->
+			<tarfileset
+				dir="${src.dir}"
+				prefix="${project.name}/src"
+			/>
+			<tarfileset
+				dir="${src.gen.dir}"
+				prefix="${project.name}/src-gen"
+			/>
+			<!-- version -->
+			<tarfileset
+				dir      = "${build.dir}"
+				includes = "${version.temp}"
+				fullpath = "${project.name}/VERSION.txt"
+			/>
+			<!-- text files -->
+			<tarfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "LICENSE.txt,README.txt"
+			/>
+		</tar>
+
+		<!-- main dist -->
+		<tar destfile="${dist.dir}/${project.name}.tar.gz" compression="gzip">
+			<!-- jar -->
+			<tarfileset
+				dir      = "${dist.dir}"
+				prefix   = "${project.name}"
+				includes = "${project.name}.jar"
+			/>
+			<!-- version -->
+			<tarfileset
+				dir      = "${build.dir}"
+				includes = "${version.temp}"
+				fullpath = "${project.name}/VERSION.txt"
+			/>
+			<!-- text files -->
+			<tarfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "LICENSE.txt,README.txt"
+			/>
+		</tar>
+
+		<!-- docs -->
+<!--
+		<tar destfile="${dist.dir}/${project.name}-docs.tar.gz" compression="gzip">
+			<tarfileset
+				dir    = "${build.dir}/doc"
+				prefix = "${project.name}/docs"
+			/>
+		</tar>
+-->
+		<property name="tars.built" value="true"/>
+	</target>
+
+	<!-- zips -->
+	<target name="zips" depends="init,grammars,docs,jars" unless="zips.built">
+		<!-- src -->
+		<zip destfile="${dist.dir}/${project.name}-src.zip">
+			<!-- build -->
+			<zipfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "build.xml,build-grammars.xml,build-jaxb.xml,build.properties"
+			/>
+			<!-- doc -->
+<!--
+			<zipfileset
+				dir    = "doc"
+				prefix = "${project.name}/doc"
+			/>
+-->
+			<!-- grammars -->
+			<zipfileset
+				dir    = "grammars"
+				prefix = "${project.name}/grammars"
+			/>
+			<!-- schema -->
+			<zipfileset
+				dir    = "schema"
+				prefix = "${project.name}/schema"
+			/>
+			<!-- src -->
+			<zipfileset
+				dir    = "${src.dir}"
+				prefix = "${project.name}/src"
+			/>
+			<zipfileset
+				dir    = "${src.gen.dir}"
+				prefix = "${project.name}/src-gen"
+			/>
+			<!-- version -->
+			<zipfileset
+				dir      = "${build.dir}"
+				includes = "${version.temp}"
+				fullpath = "${project.name}/VERSION.txt"
+			/>
+			<!-- text files -->
+			<zipfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "LICENSE.txt,README.txt"
+			/>
+		</zip>
+
+		<!-- main dist -->
+		<zip destfile="${dist.dir}/${project.name}.zip">
+			<zipfileset
+				dir      = "${dist.dir}"
+				prefix   = "${project.name}"
+				includes = "${project.name}.jar"
+			/>
+			<!-- version -->
+			<zipfileset
+				dir      = "${build.dir}"
+				includes = "${version.temp}"
+				fullpath = "${project.name}/VERSION.txt"
+			/>
+			<!-- text files -->
+			<zipfileset
+				dir      = "."
+				prefix   = "${project.name}"
+				includes = "LICENSE.txt,README.txt"
+			/>
+		</zip>
+
+		<!-- docs -->
+<!--
+		<zip destfile="${dist.dir}/${project.name}-docs.zip">
+			<zipfileset
+				dir    = "${build.dir}/doc"
+				prefix = "${project.name}/docs"
+			/>
+		</zip>
+-->
+		<property name="zips.built" value="true"/>
+	</target>
+
+	<!-- docs -->
+	<target name="docs" depends="javadoc"/>
+
+	<!-- javadoc -->
+	<target name="javadoc" depends="init,javadoc.uptodate" unless="javadoc.built">
+		<delete dir="${build.dir}/doc/api" />
+		<mkdir  dir="${build.dir}/doc/api" />
+		<javadoc
+			sourcepath       = "${src.dir};${src.gen.dir}"
+			destdir          = "${build.dir}/doc/api"
+			classpathref     = "build.cp"
+			public           = "true"
+			packagenames     = "com.inamik.template,com.inamik.template.lib.main.actions.*,com.inamik.template.lib.main.functions.*,com.inamik.template.lib.main.filters.*,com.inamik.template.util.*"
+		/>
+
+		<!-- Must...delete...evil...index-all file! -->
+		<delete file="${build.dir}/doc/api/index-all.html"/>
+	</target>
+
+	<!-- javadoc.uptodate -->
+	<target name="javadoc.uptodate" unless="javadoc.built">
+		<dependset>
+			<srcfileset
+				dir      = "${src.dir}"
+				includes = "com/inamik/template/*,com/inamik/template/lib/main/actions/**/*,com/inamik/template/lib/main/functions/**/*,com/inamik/template/lib/main/filters/**/*,com/inamik/template/util/**/*"
+			/>
+			<targetfileset
+				dir      = "${build.dir}/doc/api"
+				includes = "**/*"
+			/>
+		</dependset>
+
+		<available property="javadoc.built" file="${build.dir}/doc/api/index.html" />
+	</target>
+
+	<!-- version -->
+	<target name="version" depends="version.uptodate" unless="version.built">
+		<copy file="VERSION.txt" tofile="${build.dir}/${version.temp}" />
+
+		<replace file="${build.dir}/${version.temp}" token="@build.version@" value="${build.version}" />
+
+		<replace file="${build.dir}/${version.temp}" token="@build.date@" value="${TODAY}" />
+
+		<!--copy file="${build.dir}/${version.temp}" tofile="${build.dir}/VERSION.txt" /-->
+		<property name="version.built" value="true" />
+	</target>
+
+		<!-- version dependset -->
+		<target name="version.uptodate" unless="version.uptodate.built">
+			<dependset >
+				<srcfilelist
+					dir   = "."
+					files = "VERSION.txt"
+				/>
+				<targetfilelist
+					dir   = "${build.dir}"
+					files = "${version.temp}"
+				/>
+			</dependset>
+			<uptodate
+				property   = "version.built"
+				srcfile    = "VERSION.txt"
+				targetfile = "${build.dir}/${version.temp}"
+			/>
+
+			<property name="version.uptodate.built" value="true" />
+		</target>
+
+	<!-- clean-all -->
+	<target name="clean-all" depends="clean-dist,clean-work">
+		<ant antfile="build-grammars.xml" target="clean-all" inheritall="false"/>
+		<ant antfile="build-jaxb.xml"     target="clean-all" inheritall="false"/>
+	</target>
+
+	<!-- clean -->
+	<target name="clean" depends="clean-work">
+		<ant antfile="build-grammars.xml" target="clean" inheritall="false"/>
+		<ant antfile="build-jaxb.xml"     target="clean" inheritall="false"/>
+	</target>
+
+	<!-- clean-dist -->
+	<target name="clean-dist">
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!-- clean-work -->
+	<target name="clean-work">
+		<delete dir="${build.dir}" />
+	</target>
+</project>

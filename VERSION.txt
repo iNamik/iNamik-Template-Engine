@@ -1,0 +1,796 @@
+$Id: VERSION.txt,v 1.28 2008-02-22 03:02:06 dave Exp $
+
+iNamik Template Engine v@build.version@ (@build.date@)
+
+Version History
+===============
+
+Changes in v0.63.2a
+
+	* 	Initial GIT Version
+
+Changes in v0.63.1a
+
+	*	Updated README.txt with new jar versions.
+
+	*	Some simple typos
+
+	*	Started "Prepare for Public Release" section in TODO
+
+Changes in v0.63.0a
+
+	*	Upgraded jar files to latest versions
+			activation-1.1.1.jar
+			antlr-2.7.7.jar
+			commons-beanutils-bean-collections-1.8.3.jar
+			commons-beanutils-core-1.8.3.jar
+			commons-collections-3.2.1.jar [unused]
+			commons-logging-1.1.1.jar
+			ecj-3.6.1.jar
+			ehcache-core-2.2.0.jar
+			jaxb-api-2.2.1_20100511.jar
+			jaxb-impl-2.2.1_20100511.jar
+			jaxb-xjc-2.2.1_20100511.jar
+
+	*	Latest JAXB appears to only accept 'true' and 'false' as boolean values
+
+	*	Changed lib-main.xml to use 'true' and 'false' for boolean values.
+
+	*	Latest JAXB appears to change meaning of 'target' attribute in ANT call
+		and creates new tag 'destdir' to replace 'target'
+
+	*	Changed xjc tasks in build-jaxb.xml to use 'destdir' instead of 'target'
+
+	*	Slight typo fix in TODO.txt
+
+Changes in v0.62.0a
+
+	*	Added functionality to load templates from URLs
+
+	*	Added ability to create a 'default' singleton template engine.
+
+	*	Deprecated TemplateEngine.getInstance() - Is now just an alias for
+		TemplateEngine.getDefaultInstance()
+
+Changes in v0.61.0a
+
+	*	Added block action 'trim' to remove beginning and trailing whitespace
+		as well as trim leading whitespace from each each in the block.
+
+	*	Added filter 'inTrim' to remove beginning and trailing whitespace as
+		well as convert all inner occurences of 2 or more whitespace characters
+		into a single space character.
+
+	*	'until' and 'while' actions had not been fixed to print out the output
+		since we stopped auto-printing the output in a pervious version.
+
+	*	Upgraded ehcache jar to 1.2.4
+
+	*	Updated README.txt to include name and version of required jars.
+
+Changes in v0.60.0a
+
+	*	Implemented (seemingly) correct indention correction!!
+		If you supply well-indented source templates, the engine should
+		generate well-indented output files.
+		This involved implementing several new tag filters and
+		re-writing the TemplatePrintBuffer
+
+	*	Fleshed out the TemplateBodyContent class to be more than just a simple
+		wrapper for a string.  It is now a more usefull representation of
+		captured contet.
+
+	*	Modified the Body Action processor to call the empty afterBody() method
+		if execute() returns SKIP_*.  Previously it would call the
+		afterBody(TemplteBodyContent) method with a null value.
+
+	*	Fixed actions to support new afterBody() processing and new
+		TemplateBodyContent class.
+
+	*	Created BlockComment and Linecomment tags to mark comments within a
+		parsed file so that the comment filter could correctly remove leading
+		space and trailing lines that can be introduced by comments.
+
+	*	Updated Java Activation Framework jar and added version to jar filename.
+
+	*	Updated JAXB jars and added version to jar filenames.
+
+Changes in v0.56.6a
+
+	*	Fixed empty block action bug that I introduced in the previous
+		version.
+
+	*	Fixed some type-o's in the VERSION.txt file.  Changing the VERSION.txt
+		file makes me feel a little dirty.
+
+	*	Changed 'bodyContent' of {br} tag to 'empty' so that it will not
+		contribute unnecessary newlines to the output.
+
+	*	Modified TemplateEgine to support loading macros directly from files or
+		the classpath.  The new methods are:
+
+			loadMacroFromFile(String filename)
+			loadMacroFromFile(File file)
+			loadMacroFromResource(String resource)
+
+	*	Added method getTemplateEngine to TemplateContext.
+
+	*	Modified TemplateContext to support the ability to capture the output
+		of a rendered macro.
+
+Changes in v0.56.4a
+
+	*	Modified parser to allow empty block actions by using '/}' at the end of
+		the action open tag.  This was one of the nice features of JSP that I
+		had not implemented.
+
+		NOTE: There can be no space between the '/' and the close tag, lest
+		      the parse mistake it for a divide.
+
+Changes in v0.56.3a
+
+	*	Modified TemplateEngine to allow the loading of templates from a
+		java.io.File
+
+Changes in v0.56.2a
+
+	*	Added a copy constructor to TemplateCacheConfig.
+
+	*	Added a copy constructor to TemplateEngineConfig.
+
+	*	Modified TemplateEngineConfig.UseLib to make fields private and
+		accessable via getters.  Also added a copy constructor.
+
+	*	Modified TemplateEngine to make a defensive copy of the
+		TeplateEngineConfig used to instantiate it.
+
+	*	Modified TemplateConfigUtil.readTemplateEngineConfig() to return a
+		defensive copy of the default configuration.
+
+Changes in v0.56.0a
+
+	*	Moved generated java classes into their own source directory,
+		'src-gen'.  Also added the new source directory to .cvsignore so
+		genereated java code will no longer be part of the source tree.
+
+	*	Fixed bug in TextBody grammars.  TextBodyLexer was generating the wrong
+		lexer file, "FileLexer.g",  due to the fact that it was based off of
+		FileLexer.g.  If that's not bad enough, TextBodyParser was importing
+		FileLexer.g.  And since the two lexers were very similar, there were
+		no compile errors.  Even worse there were no runtime errors...
+		The mind boggles.
+
+	*	Modified ANT build scripts for better dependancy checking, which should
+		require less recompiling/regenerating of classes and hopefully faster
+		builds, on average.
+
+Changes in v0.55.2a
+
+	*	Moved the code to load the default template engine config BACK into
+		TemplateConfigUtil.readTemplateEngineConfig().  I guess I should have
+		left it there :)
+
+Changes in v0.55.1a
+
+	*	Finished documenting all tags within the main template library xml
+		configuration.
+
+Changes in v0.55.0a
+
+	*	HUGE javadoc effort!  Have javadoc'ed all important public classes.
+
+	*	Added numerious null checks and range checks to public methods
+		throughout the framework.
+
+	*	Modified parser to accept plain-text (i.e. unquoted) occurrences of
+		'true', 'TRUE', 'false', 'FALSE' as boolean types.
+
+	*	Modified Engine Config schema so that all attributes to the 'cache'
+		element are optional.  This allows you to create a default EHCache
+		by simply using "<cache />"
+
+	*	Modified Library Config schema to accept a 'description' element
+		within the 'template-lib' element, for the purpose of providing a
+		high-level description of your taglib.
+
+	*	Modified Library Config schema for 'action' elements to accept
+		'description', 'attribute', 'any-attribute', and 'example' sub-elements.
+
+	*	Modified Library Config schema for 'function' and 'filter' elements
+		to accept 'description', 'parameter', 'any-parameter', and 'example'
+		sub-elements.
+
+	*	Have documented the 'foreach' action within the main template library.
+		I will document the other actions/functions/filters soon.
+
+	*	Modified behavior of '==' comparisons so that if either operand is a
+		boolean, then both operands are treated as boolean for the comparison.
+
+	*	Modified behavior of '||' so that the result is the actual value and not
+		the boolean value. For example, look at the folowing template snippet:
+
+			{set foo="foo"}
+			{unset bar}
+			{set temp = $bar || $foo}
+			{$temp}
+
+		The previous behavior would output {$temp} as 'true'.  The new
+		behavio outputs {$temp} as 'foo'.
+
+	*	Added 'addMacro' method to Template.
+
+	*	Made TemplateContext.setPrintBuffer() and getPrintBuffer()
+		Package-Private.
+
+	*	Made TemplateContext.startCapture() and stopCapture() package-private.
+
+	*	Modified include functions on TemplateContext to take a parameter
+		specifying if they should capture the content of the include or not.
+		Adding this boolean paramter enabled me to make the startCaptuer() and
+		stopCapture() methods package-private.
+
+	*	Made TemplatePrintBuffer.startCapture() and stopCapture()
+		Package-Private.
+
+	*	Made the defaults for TemplateEngineConfig into 'public static final'
+		objects.
+
+	*	Made the defaults for TemplateCacheConfig into 'public static final'
+		objects.
+
+	*	Added TemplateFunctionException and TemplateFilterException
+
+	*	Modified TemplateVariable.asBoolean() treat strings with a value of
+		'false' (case insensitive) or '0' (zero) as false.
+
+	*	Modified TemplateVariable.asBoolean() to use 'size() > 0' for all
+		types where 'isSizeable() == true'.
+
+	*	Modified TemplateVariable.asDouble() to explicitly treat null as 0.0
+
+	*	Modifed TemplateVariable.asDouble() to use '(double)size()' for all
+		types where 'isSizeable() == true'.
+
+	*	Modified TemplateVariable.asDouble() to return 1.0 for any unknown
+		type that is non-null.
+
+	*	Modified actions to be more consistent and to throw exceptions instead
+		of printing error messages.
+
+	*	Modfied 'default' filter to take unlimited parameters and to search
+		each for the first non-empty paremeter.  This allows you to have
+		multiple defaults.
+
+	*	Added new function 'boolean' which essentially just returns the
+		TemplateVariable.asBoolean() result for the specified paremeter.
+		I'm really not sure this will be usefull, but we'll see.
+
+	*	Added StreamUtil to help close streams without having to catch
+		the blasted java.io.IOException.  Instead, the helper methods
+		catch the exception and simply return a boolean stated if the exception
+		was thrown.  You can safely ignore the returned boolean if you don't
+		care.
+
+Changes in v0.50.0a
+
+	*	Modified TemplateEngine to support loading templates from the
+		classpath.  This is achieved via the loadTemplateFromResource method.
+		Templates loaded from the classpath are cached.  If the template exists
+		in a jar file, then the cache entry will not expire until the JVM is
+		stopped.  If the template exists on the filesystem, then the template
+		engine will check the timestamp and expire the cache if it is newer.
+
+	*	Renamed TemplateEngine.loadTemplate to loadTemplateFromFile to
+		compliment loadTemplateFromResource.
+
+	*	Modified TemplateEngine to support 'eval'ing macros.  This is achieved
+		via the evalMacro methods.
+
+	*	Added getResourceAsURL to ClassLoaderUtil.
+
+	*	Modified {include} action to accept attribute 'resource' to specify
+		that the included template should be loaded from the classpath.  Also
+		modified the action to throw TemplateActionException instead of
+		printing errors.
+
+	*	Added removeEntry to the TemplateCache interface.
+
+	*	Changed property 'fileName' in TemplateTokenizer to just 'name'
+		since templates can originate from places other than files.
+
+	*	Added includeTemplateFromResource to TemplateContext for loading
+		templates from the classpath.
+
+	*	Renamed TemplateContext.includeTemplate to includeTemplateFromFile
+		to compliment loadTemplateFromResource.
+
+	*	Modified template engine to cache entries under their full URL string
+		representation.  I'm hoping this helps avoid collisions between file
+		templates and resource templates as well as benefitting if they happen
+		to be the same file.
+
+Changes in v0.49.0a
+
+	*	Moved the caching code from the InterpretedTemplateEngine into the main
+		TemplateEngine class.  I figure the compiler will probably be able to
+		use some caching and wanted to setup the framework now.  This took all
+		the meat out of the InterpretedTemplateEngine.
+
+	*	Deprecated TemplateProcessorConfig, although it may be brought back
+		to life in the future.
+
+	*	Modified the template config schema to remove the 'interpreter'
+		element and push the 'cache' element up under the 'template-config'
+		element.
+
+	*	Modified the EHCache code to use instances of the Ehcache interface
+		instead of the concrete Cache class.  A simple change, but it might
+		prove usefull later.
+
+	*	Removed CompiledTemplateProcessor and CompileTemplateProcessorConfig.
+		No reason to keep them around since we don't really know what the
+		framework is going to look like when we finally do get around to
+		working on the compiling execution mode.
+
+Changes in v0.48.0a
+
+	*	Made the caching a little more generic by moving the different
+		implementations into their own classes and enforcing an interface for
+		caches and cache entries.
+
+	*	Modified the caching implementation so that the ehcache jar does not
+		have to be on the classpath.  The code tries a Class.forName() and if
+		that fails it falls back to the WeakReferenceCache.
+
+Changes in v0.47.0a
+
+	*	Reversed order of entries in VERSION.txt :)
+
+	*	Changed template config schema to use attributes instead of elements
+		as much as possible.
+
+	*	Changed schema to use camel-case attribute names instead of
+		dash-seperated names. Element names are still dash-seperated.
+
+	*	Created 'inamik_template_engine-sample.xml' as a sample engine
+		configuration for users.  Also added extensive documentation about the
+		elements and attributes.
+
+	*	Created 'inamik_template_lib-sample.xml' as a sample library
+		configuration for users.  Also added extensive documentation about the
+		elements and attributes.
+
+	*	Changed default memoryStoreEvictionPolicy for the cache from
+		LRU to LFU
+
+	*	Modified schema for interpreter/cache element so that all attributes
+		except 'name' were optional.
+
+	*	Added 'useDefaultLib' attriubute to template engine schema to
+		optionally disable the auto-inclusion of the default template lib.
+
+	*	Added 'debug' attribute to template engine shema to more easily enable
+		debugging.
+
+Changes in v0.46.3a
+
+	*	Modified action tag {foreach} to use different (better) attribute names.
+		The new format is :
+
+		  {foreach id= in= [key=] [loop=]}
+
+		Where 'id' is the variable name for each iteration, 'in' is the list
+		or map that you want to iterator over, 'key' is optional and, when
+		used on maps, stores the key associated with map entry.  'loop' is
+		also optional and, when used, stores information about each iteration
+		of the loop.
+
+		This change makes {foreach} less verbose and more consistent with other
+		actions.
+
+Changes in v0.46.2a
+
+	*	Enabled more compiler warnings and fixed as many generated warnings
+		as possible.  I modified the grammar (grammars/*.g) files to
+		@suppressWarnings("all") on all generated classes, but that does not
+		remove "unused import" warnings.  the JAXB-generated files also
+		contain warnings that I cannot remove.  It would be nice if I could
+		disable warning checks for specific packages, but I don't know how to
+		do that.
+
+Changes in v0.46.1a
+
+	*	Modified parser to accept embedded maps within general expressions.
+		This allows things like :
+
+		  {set $map = {name='David' email='me@here.com'} }
+		  name = {$map.name}
+
+		Except for being wrapped in '{' and '}', embedded maps use the exact
+		same syntax as action attributes.
+
+	*	Modified parser to allow action attributes (and thusly embedded maps)
+		to optionally accept '=>' in place of '='. So you can do something like
+		{set $name => 'foo' }
+
+	*	Modified parser to allow action attributes (and thusly embedded maps)
+		to optionally accept commas (','), between elements.  So you can do
+		something like {$set $foo => bar, $boo => blah }
+
+Changes in v0.46.0a
+
+	*	Added new action tag parm-types "id" and "id-list".  This enables
+		things such as {unset var1, var2} and {macro $foo}. Actually, I still
+		have macro defined as {macro id=foo}, but I'm considering creating an
+		'alternative' tag lib that would have shorter, less verbose versions
+		of some of the tags.  Namely, foreach, include, capture, macro and text.
+		The id spec is the same as the id's for attribute actions, that is,
+		a leading '$' is allowed, even though it is ignored.
+
+	*	Added new action {unset} which deletes variables
+
+	*	Re-worked NewLineTagFilter.  It was behaving incorrectly when a body
+		tag was contained on a single line.  This was a flaw in the way it
+		was programmed to detect block-lines and non-block-lines, so it had to
+		be almost completely rewritten.
+
+	*	Disabled an ambiguous warning in TextBodyParser.g.  I'd rather fix
+		the parser to not generate the warning, but I have been
+		unsuccessful in my attempts to do so.
+
+	*	Improved toString() performance on several token classes.
+
+Changes in v0.45.2a
+
+	*	Modified parser to accept embedded lists within general expressions.
+		This allows things like {set $var=[1,2,3]}.  You can even embed lists
+		within lists.
+
+	*	Modifed TemplateVariable.toString() to print arrays in a similar way
+		to how Lists are printed (i.e. "[ element, element, ...]")
+
+Changes in v0.45.0a
+
+	*	Added ability to 'eval' templates at runtime from String or InputStream.
+		The new methods are TemplateEngine.evalTemplate(*).  Evals are
+		processed via the InterpretedProcessor only and are not cached.
+
+	*	Renamed TemplateEngine.getTemplate(*) to loadTemplate(*).  This is to
+		better associate the functions with the loading of files, as opposed to
+		the new evalTemplate(*) functions.
+
+	*	Modified TagLexer.g to set lookahead (k) to 2 (from 3) ... I really
+		don't remember why it was at 3 to begin with, it never needed to be
+		larger than 2.
+
+	*	Modified parser to treat Variable & QuotedString tags as full
+		expressions.  This doesn't really have much effect on quoted string
+		tags, but it adds a lot of power to variable tags.  For instance, now
+		you can do "{$var + 1}".
+
+	*	Added new tag, ExpressionTag, to support the above change.
+
+	*	Had to modify ExpressionToken to accept a FilterListToken in order to
+		maintain backward compatibility with the variable expression and quoted
+		string tags.
+
+	*	Deprecated QuotedStringTag and VariableExpressionTag as they have been
+		replcaced by the more general and more powerful ExpressionTag.
+
+	*	Added new action tag {out} as an alias for {print}.  I believe {out} to
+		be just as meaningful (if not more to some people) and less verbose
+		than {print}.  I may eventually deprecate {print} depending on user
+		feedback.  The new ExpressionTag removes much of the need for either of
+		these two actions.  One situation where they are still needed is if you
+		want to print an expression that doesn't start with a variable
+		reference (i.e. start with '$').
+
+Changes in v0.44.0a
+
+	*	Finally added support for text (literal) body-content tags.  One note
+		about text body-content tags is that they CANNOT use the short-hand
+		end-block '{/}'.  They MUST use the tag name, although they can ommit
+		the prefix if it is 'main'.
+
+	*	Added new {text} action to support the text body-content type.
+
+	*	Modified parser to allow 0 (zero) attributes in an action with
+		parm-type attributes.  I didn't realize this was helpful until I did
+		the {text} action and wanted to optionally allow an 'id' attribute.
+		Interestingly enough, the expression-list parser was already set to
+		allow 0 occurences.
+
+	*	Added new grammars 'TextBodyLexler.g' and 'TextBodyParser.g' to support
+		the new text body-content type.
+
+	*	Added two exception classes 'TemplateException' and
+		'TemplateActionException'.  This is the beginning of trying to make
+		a usefull, robust exception-handling facility.
+
+	*	Modified the TemplateActionTag interface to throw
+		TemplateActionException in the majority of methods.
+
+	*	Modified InterpretedTemplateProcessor to throw exceptions of eating
+		them or re-throwing them as RuntimeException
+
+	*	Modified action {include} to throw exceptions instead of print error
+		messages dirctly to the output stream.  We'll see how this works out.
+
+	*	Changed TemplateContext.reset() to Package-Private.  I'm not sure I
+		want the ability to reset the context to be public.
+
+	*	Renamed TemplateEngine.getTemplateFile() to getFileFromTemplateRoot()
+		and changed visibility to public.
+
+	*	Added TemplateEngine.getFileFromApplicationRoot() to match the
+		new public getFileFromTemplateRoot()
+
+	*	Added static helper methods to TemplateVariable to help actions with
+		attributes retreive typed objects from TemplateVariables with defaults
+		in case the specified attribute was not set.
+
+	*	Improved toString() on ActionTag and EndBlockTag
+
+Changes in v0.43.0a
+
+	*	It appears that I introduced a lot of parser bugs in the previous
+		version.  I can only hope after many many hours of work that I have
+		corrected them. I REALLY NEED SOME UNIT TESTS!
+
+	*	Modified parser to accept single-quoted strings.  As expected,
+		it does not escape any characters or support any embedded variables or
+		general expressions.  They can be used any place that double-quoted
+		strings can be used.
+
+	*	Added new action "{br}" for explicitly adding newlines to the output
+
+	*	Fixed alt-body bug that was introduced with the changes for macro
+		support
+
+	*	Modified tagfilters.NewLineFilter.  Funny how the behavior I coded
+		when designing the filter seemed perfect, but in practice it didn't
+		feel very intuitive.  I plan to eventually paramatize the different
+		filters and allow them to be conditonally included and configured via
+		the template-config.
+
+	*	Added 'antlr.trace' property to build.properties.  This enables trace
+		output in the antlr generated lexers and parsers
+
+	*	Modified all "start rules" within parsers to begin with "start_"
+
+	*	Commented out all occurrences of "getInputState().reset()" in the
+		parsers.  I really don't know if that does anything and never seems
+		to do what I wanted.
+
+Changes in v0.42.0a
+
+	*	Added @SuppressWarnings("uncecked") to all lexers to cleanup warnings
+		that are not fixable with the generated lexer code.
+
+	*	Modified parser to allow simple unquoted strings to be tokenized as
+		quoted strings.  This allows you to do things such as
+		{set name=value} or {$map[key]} or {if $foo == bar}
+
+	*	Modified parser to accept full general expressions within variable
+		indexes.  Now you can do things like {$list[$index + 1]}
+
+	*	Modified parser to accept full general expressions within quoted
+		strings.  Now you you can do things such as {"Count = { $index + 1 }"}
+
+	*	Modified IndexToken so that it only accepts ExpressionToken.
+		ExpressionToken is a superset of the previusly accepted tokens.
+
+	*	Modified QuotedStringElementToken to accept ExpressionToken
+
+	*	Corrected and optimized the toString() methods on some of the tokens.
+		More will likely follow.
+
+	*	Cleaned up code segments in parsers that call into other parsers.
+		The process is much more uniform now.
+
+	*	Modified parsers so TagLexer.QUOTE no longer needs to mark/rewind
+
+	*	Greatly simplied VariableExpressionParser.g
+
+	*	Cleaned up TemplateTokenizer a bit.  Now it gives a stack trace when
+		it catches an exception.
+
+Changes in v0.41.0a
+
+	*	Added 'macro' support which allows you to save a tokenized portion of
+		a template to be rendered later.  Macros can be rendered multiple
+		times and may provide different output each time based on the
+		variables defined at the time of render.
+
+	*	Added template action tag 'macro' to support macros.
+
+	*	Made other modifications necessary to support macros.
+
+	*	Added strongly typed 'afterBody()' methods to the TemplateActionTag
+		interface to support the various 'body-content' types.  A content-type
+		of 'empty' will use 'afterBody()'; 'text' and 'template' will use the
+		'afterBody(TemplateBodyContent)' version; 'macro' will use the
+		'afterBody(Macro)' version.
+
+	*	Modified all actions to implement the correct afterBody() versions.
+
+Changes in v0.40.0a
+
+	*	Fixed a bug for embedding body tags within body tags
+
+	*	Allow '$' to appear before attribute name in attribute list tags.
+		Note the '$' is silently ignored, but it can seem like a convenience
+		for tags such as {set $name="value"}
+
+	*	Added Apache-Commons-Loggin to serveral classes and will continue to
+		add more logging as time goes by.
+
+	*	Created filters to translate and fixup tags during the tokenizing stage.
+		Translations performed by these filters include:
+
+			- Remove leading carriage-returns at top of document
+			- Remove trailing spaces from each line
+			- Fix indentations introduced by well-formatted templates
+			- Remove excess carriage-returns introduced by well-formateed
+			  templates
+			- Limit the max number of consecutive carriage-returns within
+			  a template to two (2)
+			- Limit the max number of cariage-returns at the end of a template
+			  to one (1)
+
+		This was a huge task and I consider it a major accomplishment as no
+		other template library that I've seen even attempts to address the
+		issue of excess whitespace introduced by template tags.
+
+	* 	Implemented a secondary, backup cache for interpreted templates.
+		If you choose not to use an EHCACHE, the interpreter will use a
+		Map of WeakReferences to the TokenizedTemplate.  This should allow a
+		template to stay at least long enough so that if it's included more
+		than once within a single template process, it will not have to be
+		re-tokenized.  In practice, the TokenizedTemplates will stay in the
+		backup cache until the garbage collecter reclaims them, which could
+		be a lot longer than one template process.
+
+	*	Added a LeadingSpaceTag to represent whitespace at the start of a
+		template line.  This may come in handy later for features such as
+		correctly indenting include files to match the the indenting of the
+		including template and possible correclty indenting text printed from
+		action tags and variable strings.
+
+	*	Modified Template to store variables set with Template.addVariable
+		in a local store and then add the variables to the Context during
+		process() execution.  This allows you to process a template multiple
+		times without having to reset all of the variables each time.
+
+	*	Modified the TemplateActionTag interface to support 4 versions of the
+		execute() method.  One for each type "ParmType" that an action can
+		support.  I know it seems a little clunky, but I think it is outweighed
+		by the ability to have strong types for your action parameters.
+
+	*	Modified all actions to implement the new TemplateActionTag inteface.
+		This reduced the complexity and code size of each of the actions
+		considerably so I believe it was a good idea.
+
+	*	Added adVariables(Map) to Context as an easy way to add a bunch of
+		variables.  This was mainly to support the changes to Template mentioned
+		above, but I'm sure it will come in handy elsewhere.
+
+	*	I moved the code for obtaining a 'default' templateConfig BACK into
+		TemplateEngine.createInstance() from TemplateConfigUtil.
+
+	*	Changed the template-lib config for the {print} action to have
+		body-content="text".  This is now a supported combination and tells
+		the new TagFilters (see above) not to treat this tag differently than
+		an "empty" aciton tag.
+
+	*	Modified BodyActionTag.toString() so that it will NOT try to print the
+		body elements if there are none, preventing an NPE being thrown.
+
+	*	Modified EndlTag.toString() to include the character '<' in so that I
+		visually see where the newslines are and detect trailing whitespace.
+
+Changes in v0.3.0a
+
+	*	Many RADICAL changes
+
+	*	Renamed all files under 'com.inamik.template' to be more consistent
+
+	*	Moved the following jars from lib-build to lib:
+			activation.jar
+			jaxb-api.jar
+			jaxb-impl.jar
+			jsr173_1.0_api.jar
+
+	*	Added "commit()" in grammars to 'undo' mark() with no rewind()
+
+	*	Modified grammars to store engineConfig instead of Context
+
+	*	Added optional 'application-root' elemet to Template-Config.xsd
+
+	*	Added 'name' as required attribute to interpreter/cache element
+
+	*	Added 'resource' as optional attribute to use-lib element
+
+	*	Moved actions/functions/filters into
+		'com.inamik.template.lib.main.[actions|functions|filters].*'
+
+	*	Moved main use-lib config into 'com.inamik.template.lib.main'
+
+	*	Added 'include' action tag
+
+	*	Deleted BlockCommentTag and EmptyBlockTag
+
+	*	Added package 'com.inamik.template.util'
+
+	*	Added 'ClassLoaderUtil' in util package
+
+	*	Added 'TepmlateConfigUtil' in util package
+
+	*	Modified build.xml to include non-java files in output jars.
+
+	*	Modified build-grammars.xml to correctly use 'build.cp' as classpath
+
+	*	Fixed build-jaxb.xml to correctly clean-dist and create jaxb src dirs
+
+Changes in v0.0.2
+
+	*	When tag delimeter = '{', using 2+ consecutive '{' or '}' characters,
+		with no space, will produce n-1 '{' or '}' characters on output.
+		i.e. using '{{' will produce '{' and using '}}}' will produce '}}'
+
+	*	When tag delimeter = '{{', using 3+ consecutive '{' or '}' characters,
+		with no space, will produce n-1 '{' or '}' characters on output.
+		i.e. using '{{{' will produce '{{' and using '}}}}' will produce '}}}'
+
+	*	EndlTag no longer stores the text that triggered the endl
+
+	*	Added antlr-2.7.6.jar to lib
+
+	*	Added commons-collection-2.1.1.jar to lib
+
+	*	Added ehcache-1.2.2.jar to lib
+
+	*	Created lib-build folder to hold jars needed just for build
+
+	*	Added activation.jar to lib-build
+
+	*	Added jaxb-api.jar to lib-build
+
+	*	Added jaxb-impl.jar to lib-build
+
+	*	Added jaxb-xjc.jar to lib-build
+
+	*	Added jsr173_1_0_api.jar to lib-build
+
+	*	Modified Template-Config schema to support 'interpreter' and 'compiler'
+		elements. Currently, interpreter just supports a 'cache' element, with
+		parameters that match ehcache's cache element, sans 'name'.  The
+		compiler element just supports a 'class-root' element to specify where
+		to store compile classes.
+
+	*	Made 'CompileUnit', 'FQName', and all necessary Tags and Tokens
+		Serializable to support on-disk caching in EHCache
+
+	*	Fixed compilation warning in Context.findAncestorWithType()
+
+	*	Removed 'com.inamik.template.helpers' package.  May re-introduce as
+		'com.inamik.templte.util'
+
+	*	Added build-jaxb.xml for building the jaxb bindings
+
+	*	Got build.xml working
+
+	*	Fixed build-grammars.xml to correctly rely on 'build.cp' and not
+		'java.class.path'
+
+	*	Added LICENSE.txt
+
+	*	Added README.txt -- I never use this file, so I should probably stop
+		including it in my projects
+
+	*	Added VERSION.txt (this file)
+
+Changes in v0.0.1
+
+	*	All development up to this point :)
+

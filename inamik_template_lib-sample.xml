@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+$:Id $
+
+Sample Template Library Configuration
+
+Tag Names
+~~~~~~~~~
+
+All tags (action, filter and function) have a specified name.  This name, along
+with the prefix specified in the template engine configuration, make the
+"fully qualified name" of your tag.  The template must use the fully qualified
+name in order to call your tag. The only exception to this rule are actions
+with the prefix 'main'.  Tags within the 'main' namespace can be called without
+specifying the prefix.
+
+-->
+<template-lib>
+
+	<!--
+	Template Actions
+
+	name
+	~~~~
+	 * Required   : Yes
+	 * Description: The name of your action
+
+	class
+	~~~~~
+	 * Required   : Yes
+	 * Description: The fully qualified class name of your action
+	                The class must implement com.inamik.template.TemplateActionTag
+
+	parmType
+	~~~~~~~~
+	  * Required   : Yes
+	  * Values     : empty | attributes | expression | expression-list | id | id-list
+	  * Description: The type of parameters your action takes.  This restricts
+	                 the user input to the specified type and relates
+	                 directly which version of TemplateActionTag.execute()
+	                 you will need to implement.  Acceptable values are :
+
+	                 empty          - The action takes no parameters
+
+	                 attributes     - name/value pairs i.e.
+	                                  {set name1='foo' name2='bar'}
+
+	                 expression     - Full mathematical or conditional
+	                                  expression i.e.
+	                                  {if $name1 == 'foo' || $name2 == $name1}
+
+	                 expression-list - Comma (',') seperated list of
+	                                   expressions i.e.
+	                                   {out $foo + 1, "Hello, $bar"}
+
+	                 id              - A single identifier i.e.
+	                                   {unset name1}
+
+	                 id-list         - Comma (',') seperated list of id's i.e.
+	                                   {unset name1, name2}
+
+	bodyType
+	~~~~~~~~
+	 * Required   : Yes
+	 * Values     : empty | body | body-alt
+	 * Description: Specifies whether your tag has a body and, if it does have
+	                a body, whether it stands on its own or as an alternative flow
+	                to other body tags.  Acceptable values are :
+
+	                empty - Your action does not have a body.  Empty actions do
+	                        not need a close tag (i.e. {/action} )
+
+	                body  - Your action does contain other tags/text.
+	                        Body tags need to have an open and a close tag i.e.
+	                        {if $foo}foo{/if}
+
+	                body-alt - Your ation has a body, but is an alternative
+	                           flow to another body action.  Body-Alt actions
+	                           have an open tag, but do not have a close tag.
+	                           For example, the 'else' in the following example
+	                           template is a body-alt tag:
+	                           {if $foo}foo{else}bar{/if}
+
+	bodyContent
+	~~~~~~~~~~~
+	 * Required   : Yes
+	 * Values     : empty | template | text | macro
+	 * Description: Specifies how the content of your body action tag should be
+	                treated. Acceptable values are:
+
+	                empty    - Used only for tags with bodyType 'empty'
+
+	                template - Treat the body content as a standard template.
+	                           The is the normal option for body and body-alt
+	                           tags.  All of the actions in the body are
+	                           processed before the the call to
+	                           TemplateActionTag.afterExecute()
+
+	                text     - Treat the body content as literal text.  This
+	                           means that the body content will not be treated
+	                           as a template, even if it contains template tags
+
+	                macro    - Treats the body content as a template, but does
+	                           not process the body before calling
+	                           TemplateActionTag.afterExecute()
+
+	                           Instead, it saves the body content as a 'macro' that
+	                           can be processed later, and even processed multiple
+	                           times if desired.
+	-->
+<!--
+	<action name="" class="" parmType="" blockType="" bodyContent="" />
+-->
+
+	<!--
+	Template Functions
+
+	Functions can be called within general expressions i.e.
+
+	  {set foo=function('bar')}
+	or
+	  {if function($foo) == $bar}
+
+	NOTE: The template engine does not allow you to put any restrictions on the
+	      number or type of parameters passed into a function.  Is it up to the
+	      function implementation to verify data passed in.
+
+	name
+	~~~~
+	 * Required   : Yes
+	 * Description: The name of your function
+
+	class
+	~~~~~
+	 * Required   : Yes
+	 * Description: The fully qualified class name of your function
+	                The class must implement com.inamik.template.TemplateFunctionTag
+	-->
+<!--
+	<function name="" class="" />
+-->
+
+	<!--
+	Template Filters
+
+	Filters are used to 'filter' text within output tags i.e.
+
+	  {"Hello, $foo" | lower}
+	or
+	  {$foo | default('bar') | upper}
+
+	NOTE: The template engine does not allow you to put any restrictions on the
+	      number or type of parameters passed into a filter.  Is it up to the
+	      function implementation to verify data passed in.
+
+	Filters are very similar to functions.  In fact, TemplateFilterTag
+	extends TemplateFunctionTag.  Filters are called just like functions,
+	except that the 1st parameter is implicitly set as the value being
+	filtered.
+
+	This relationship between filters and functions allows you to re-use filters
+	AS functions.  You still have to define the function, but you can use the
+	filter's class.  You also have to explicitly pass the first parameter in
+	when calling the function.
+
+	Assuming you have a filter named 'lower' that has also been defined as a
+	function named 'lower' and given the same 'class' attribute, the following
+	two templates would	produce the same output:
+
+	  {$foo | lower}
+	and
+	  {out lower($foo)}
+
+	Filters can also take parameters.  For instance, lets assume you have a
+	filter named 'default' that prints a returns a specified value if the
+	filtered value is empty.  It might look like this:
+
+	{$foo | default('bar')}
+
+	name
+	~~~~
+	 * Required   : Yes
+	 * Description: The name of your filter
+
+	class
+	~~~~~
+	 * Required   : Yes
+	 * Description: The fully qualified class name of your filter
+	                The class must implement com.inamik.template.TemplateFilterTag
+	-->
+<!--
+	<filter name="" class="" />
+-->
+
+</template-lib>

@@ -1,0 +1,26 @@
++ Remove mark/reset from QUOTE token in Taglexer.g
+
+* Remove mark/reset from tokens in general
+
++ Allow General Expressions inside variable indexes
+
++ Support Single-Quotes (')
+
++ Support 'text' body-content
+
++ Supported unquoted 'simple' text in place of quoted strings
+
+* Add a testing suite!
+
++ Document your public classes and interfaces!
+
+* Document your private classes and interfaces
+
+
+Prepare Project For Public Release
+----------------------------------
+
+Documentation:
+	Main Lib
+	Template Engine Config
+	Template ib Config
