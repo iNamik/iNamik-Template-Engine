@@ -1,79 +1,161 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8'>
+	<head>
+		<meta charset='utf-8'>
+		<title>iNamik/iNamik-Template-Engine @ GitHub</title>
+		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.0.0.min.css">
+	</head>
+	<body>
+		<div class="tabs">
+			<ul>
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="api/index.html">JavaDocs</a></li>
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine">GitHub</a></li>
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine/wikis">Wiki</a></li>
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine/issues">Issues</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<h1>iNamik Template Engine <small>v0.63.2.a</small></h1>
+			<h2>About</h2>
+			<p>
+				iNamik Template Engine is a Java-based Template Engine.
+			</p>
+			<h2>License</h2>
+			<p>GPL v2</p>
+			<h2>Features</h2>
+			<ul class="unstyled">
+				<li>
+					<h3>Style</h3>
+					<p>The templating style is similar to PHP's <a href="http://smarty.net">Smarty Templates</a>.</p>
+					<p>
+						The Engine supports the following tag identifiers:
+						<ul>
+							<li> Single-Brace (smarty default): <pre>{ $foo }</pre></li>
+							<li> Double-Brace (javascript friendly): <pre>{{ $foo }}</pre></li>
+							<li> Angle-Percent (asp-like): <pre><% $foo %></pre></li>
+						</ul>
+				</li>
+				<li>
+					<h3>Suitable for rending any textual content</h3>
+					<ul>
+						<li>XML</li>
+						<li>HTML</li>
+						<li>Plain Text</li>
+					</ul>
+				</li>
+				<li>
+					<h3>Encourages well-formatted templates</h3>
+					<ul>
+						<li>Works <em>very</em> hard to remove extra whitespace introduced by template tags</li>
+						<li>When consistent indentation is used, it is preserved</li>
+						<li>
+							For example, this template snippet<br/>
+							<pre>
+{* indentations due to well-formatted block tags will be removed *}
+{capture id='body'}
+	{set $list=['one', 'two', 'three']}
+	{foreach id=item in=$list loop=loop}
+		{if $loop.first}
+			# Start List
+		{/if}
+			{* This tab preserved *}
+			[{$loop.iteration}] {$item}
+		{if $loop.last}
+			# End List
+		{/if}
+	{/}
+{/capture}
+{$body}
+							</pre>
+							Renders this well-formatted output<br/>
+							<pre>
+# Start List
+	[1] one
+	[2] two
+	[3] three
+# End List
+							</pre>
+						</li>
 
-  <title>iNamik/iNamik-Template-Engine @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #2acfce;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #d53031; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #d53031; }
-    h3 { text-align: center; color: #d53031; }
-    a { color: #d53031; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
-
-<body>
-  <a href="http://github.com/iNamik/iNamik-Template-Engine"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/iNamik/iNamik-Template-Engine/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/iNamik/iNamik-Template-Engine/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/iNamik/iNamik-Template-Engine">iNamik-Template-Engine</a>
-      <span class="small">by <a href="http://github.com/iNamik">iNamik</a></span></h1>
-
-    <div class="description">
-      Java-based Template Engine
-    </div>
-
-    <h2>License</h2>
-<p>GPL v2</p>
-<h2>Authors</h2>
-<p>David Farrell (DavidPFarrell@yahoo.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>David Farrell (spamfreedave-github@yahoo.com)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/iNamik/iNamik-Template-Engine/zipball/master">zip</a> or
-      <a href="http://github.com/iNamik/iNamik-Template-Engine/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/iNamik/iNamik-Template-Engine</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/iNamik/iNamik-Template-Engine">iNamik/iNamik-Template-Engine</a>
-    </div>
-
-  </div>
-
-  
-</body>
+					</ul>
+				<li>
+				<li>
+					<h3>Caching</h3>
+					<p>
+						The Engine supports <a href="http://ehcache.org/">EHCache hi-performance cache</a>
+						for storage of tokenized templates.
+					</p>
+					<p>
+						If you decide not to use the EHCache, the Engine will employ a temporary cache
+						using a hashtable of weak references.  This is used to ensure that included
+						templates are only tokenized once when processing the main template.
+					</p>
+				</li>
+				<li>
+					<h3>Macros</h3>
+					<p>
+						You can capture a template (or portion of) in tokenized form and 
+						render it multiple times.<br/>
+						<pre>
+{macro id='macro'}
+	Hello, {$name}
+{/macro}
+{set name='foo'}
+{$macro}
+{set name='bar'}
+{$macro}
+						</pre>
+					</p>
+				</li>
+			</ul>
+			<h2>Learn More</h2>
+			<ul calss="unstyled">
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine/wiki/iNamik-Main-Template-Library-Config">Standard tags, filters and functions</a></li>
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine/wiki/Sample-Template-Engine-Config">Configuring the template engine</a></li>
+				<li><a href="http://github.com/iNamik/iNamik-Template-Engine/wiki/Sample-Template-Library-Config">Creating your own tag library</a></li>
+			</ul>
+			<h2>Requirements</h2>
+			<ul class="unstyled">
+				<li>
+					<h3>Jars needed to build &amp; run the Engine</h3>
+					<ul>
+						<li>Activation (1.1.1)</li>
+						<li>ANTLR (2.7.7)</li>
+						<li>Commons BeanUtils <small>(1.8.3)</small> Collections</li>
+						<li>Commons Beanutils <small>(1.8.3)</small> Core</li>
+						<li>Commons Logging <small>(1.1.1)</small></li>
+						<li>EHCache <small>(2.2.0)</small> Core</li>
+						<li>JAXB API  <small>(2.2.1 20100511)</small></li>
+						<li>JAXB IMPL <small>(2.2.1 20100511)</small></li>
+					</ul>
+				</li>
+				<li>
+					<h3>Jars needed just for building</h3>
+					<ul>
+						<li>JAXB XJC <small>(2.2.1 20100511)</small></li>
+					</ul>
+				</li>
+			</ul>
+			<h2>Download</h2>
+			<ul class="unstyled">
+				<li>
+					<h3>Source Distribution</h3>
+					<ul>
+						<li>View the source code on <a href="http://github.com/iNamik/iNamik-Template-Engine">GitHub</a></li>
+						<li><a href="http://github.com/iNamik/iNamik-Template-Engine/zipball/master">ZIP Format</a></li>
+						<li><a href="http://github.com/iNamik/iNamik-Template-Engine/tarball/master">TAR Format</a></li>
+					</ul>
+				</li>
+				<li>
+					<h3>Binary Distributions <small>v0.63.2a</small></h3>
+					<ul>
+						<li><a href="https://github.com/downloads/iNamik/iNamik-Template-Engine/com.inamik.template-0.63.2a.zip">ZIP Format</a></li>
+						<li><a href="https://github.com/downloads/iNamik/iNamik-Template-Engine/com.inamik.template-0.63.2a.tar.gz">TAR Format</a></li>
+						<li><a href="https://github.com/downloads/iNamik/iNamik-Template-Engine/com.inamik.template-0.63.2a.jar">Runtime Jar</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</body>
 </html>
