@@ -6,80 +6,78 @@ iNamik Template Engine
 FEATURES
 --------
 
-1.	**Style**
+* **Style**
 
-	The templating style is similar to PHP's [Smarty Templates](http://smarty.net).
+  The templating style is similar to PHP's [Smarty Templates](http://smarty.net).
 
-	The Engine supports the following tag identifiers:
+  The Engine supports the following tag identifiers:
 
-	1. Single-Brace (smarty default):
-	{ $foo }
+  * Single-Brace (smarty default):
 
-	2. Double-Brace (javascript friendly):
-	{{ $foo }}
+      { $foo }
 
-	3. Angle-Percent (asp-like):
-	<% $foo %>
+  * Double-Brace (javascript friendly):
 
-2.	**Suitable for rending any textual content**
+      {{ $foo }}
 
-	* XML
-	* HTML
-	* Plain Text
+  * Angle-Percent (asp-like):
 
-3.	**Encourages well-formatted templates**
+      <% $foo %>
 
-	* Works very hard to remove extra whitespace introduced by template tags
-	* When consistent indentation is used, it is preserved
-	* For example, this template snippet
+* **Suitable for rending any textual content**
 
-	<pre>
-	{* indentations due to well-formatted block tags will be removed *}
-	{capture id='body'}
-		{set $list=['one', 'two', 'three']}
-		{foreach id=item in=$list loop=loop}
-			{if $loop.first}
-				# Start List
-			{/if}
-				{* This tab preserved *}
-				[{$loop.iteration}] {$item}
-			{if $loop.last}
-				# End List
-			{/if}
-		{/}
-	{/capture}
-	{$body}
-	</pre>
+  * XML
+  * HTML
+  * Plain Text
 
-	Renders this well-formatted output
+* **Encourages well-formatted templates**
 
-	<pre>
-	\# Start List
-		[1] one
-		[2] two
-		[3] three
-	\# End List
-	</pre>
+  * Works very hard to remove extra whitespace introduced by template tags
+  * When consistent indentation is used, it is preserved
 
-4.	**Caching**
+    For example, this template snippet
 
-	The Engine supports [EHCache hi-performance cache](http://ehcache.org) for storage of tokenized templates.
+		{* indentations due to well-formatted block tags will be removed *}
+		{capture id='body'}
+			{set $list=['one', 'two', 'three']}
+			{foreach id=item in=$list loop=loop}
+				{if $loop.first}
+					# Start List
+				{/if}
+					{* This tab preserved *}
+					[{$loop.iteration}] {$item}
+				{if $loop.last}
+					# End List
+				{/if}
+			{/}
+		{/capture}
+		{$body}
 
-	If you decide not to use the EHCache, the Engine will employ a temporary cache using a hashtable of weak references. This is used to ensure that included templates are only tokenized once when processing the main template.
+    Renders this well-formatted output
 
-5.	**Macros**
+		# Start List
+			[1] one
+			[2] two
+			[3] three
+		# End List
 
-	You can capture a template (or portion of) in tokenized form and render it multiple times.
+* **Caching**
 
-	<pre>
-	{macro id='macro'}
-		Hello, {$name}
-	{/macro}
-	{set name='foo'}
-	{$macro}
-	{set name='bar'}
-	{$macro}
-	</pre>
+  The Engine supports [EHCache hi-performance cache](http://ehcache.org) for storage of tokenized templates.
+
+  If you decide not to use the EHCache, the Engine will employ a temporary cache using a hashtable of weak references. This is used to ensure that included templates are only tokenized once when processing the main template.
+
+* **Macros**
+
+  You can capture a template (or portion of) in tokenized form and render it multiple times.
+
+		{macro id='macro'}
+			Hello, {$name}
+		{/macro}
+		{set name='foo'}
+		{$macro}
+		{set name='bar'}
+		{$macro}
 
 
 LEARN MORE
@@ -94,28 +92,28 @@ LEARN MORE
 REQUIREMENTS
 ------------
 
-1.	**Jars needed to build &amp; run the Engine**
+* **Jars needed to build &amp; run the Engine**
 
-	* Activation (1.1.1)
-	* ANTLR (2.7.7)
-	* Commons BeanUtils (1.8.3) Collections
-	* Commons Beanutils (1.8.3) Core
-	* Commons Logging (1.1.1)
-	* EHCache (2.2.0) Core
-	* JAXB API (2.2.1 20100511)
-	* JAXB IMPL (2.2.1 20100511)
+  * Activation (1.1.1)
+  * ANTLR (2.7.7)
+  * Commons BeanUtils (1.8.3) Collections
+  * Commons Beanutils (1.8.3) Core
+  * Commons Logging (1.1.1)
+  * EHCache (2.2.0) Core
+  * JAXB API (2.2.1 20100511)
+  * JAXB IMPL (2.2.1 20100511)
 
-	**NOTE:** When building from source, these jars should be placed into a folder named
+    **NOTE:** When building from source, these jars should be placed into a folder named
 
-	*/&nbsp;path&nbsp;/&nbsp;to&nbsp;/&nbsp;distribution&nbsp;/&nbsp;lib&nbsp;/*
+    */&nbsp;path&nbsp;/&nbsp;to&nbsp;/&nbsp;distribution&nbsp;/&nbsp;lib&nbsp;/*
 
-2.	**Jars needed just for building**
+* **Jars needed just for building**
 
-	* JAXB XJC (2.2.1 20100511)
+  * JAXB XJC (2.2.1 20100511)
 
-	**NOTE:** When building from source, this jar should be placed into a folder named
+    **NOTE:** When building from source, this jar should be placed into a folder named
 
-	*/&nbsp;path&nbsp;/&nbsp;to&nbsp;/&nbsp;distribution&nbsp;/&nbsp;lib-build&nbsp;/*
+    */&nbsp;path&nbsp;/&nbsp;to&nbsp;/&nbsp;distribution&nbsp;/&nbsp;lib-build&nbsp;/*
 
 
 DOWNLOAD
