@@ -5,6 +5,10 @@ iNamik Template Engine v@build.version@ (@build.date@)
 Version History
 ===============
 
+Changes in v0.63.3a
+
+	*	Improved content of README, extension changed to .md
+
 Changes in v0.63.2a
 
 	* 	Initial GIT Version
