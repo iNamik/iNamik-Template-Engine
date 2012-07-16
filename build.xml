@@ -189,7 +189,7 @@
 			<tarfileset
 				dir      = "."
 				prefix   = "${project.name}"
-				includes = "LICENSE.txt,README.txt"
+				includes = "LICENSE.txt,README.md"
 			/>
 		</tar>
 
@@ -211,7 +211,7 @@
 			<tarfileset
 				dir      = "."
 				prefix   = "${project.name}"
-				includes = "LICENSE.txt,README.txt"
+				includes = "LICENSE.txt,README.md"
 			/>
 		</tar>
 
@@ -273,7 +273,7 @@
 			<zipfileset
 				dir      = "."
 				prefix   = "${project.name}"
-				includes = "LICENSE.txt,README.txt"
+				includes = "LICENSE.txt,README.md"
 			/>
 		</zip>
 
@@ -294,7 +294,7 @@
 			<zipfileset
 				dir      = "."
 				prefix   = "${project.name}"
-				includes = "LICENSE.txt,README.txt"
+				includes = "LICENSE.txt,README.md"
 			/>
 		</zip>
 
